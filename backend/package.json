@@ -12,6 +12,8 @@
   "license": "ISC",
   "description": "Backend for the project sitcoin",
   "dependencies": {
+    "backend": "file:",
+    "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "debug": "^4.4.0",
     "dotenv": "^16.4.7",
