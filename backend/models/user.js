@@ -9,6 +9,10 @@ const userSchema = mongoose.Schema({
         type : Number,
         required : true,
     },
+    amount : {
+        type : Number,
+        default : 100
+    },
     contact : {
         type : Number,
         required : true,
@@ -16,6 +20,10 @@ const userSchema = mongoose.Schema({
     password : {
         type: String,
         required: true,
+    },
+    transactions : {
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : 'Transactions',
     }
 });
 
