@@ -2,19 +2,22 @@ import debug from 'debug';
 import bcrypt from 'bcrypt';
 import { userdb } from '../models/user.js';
 import { generateToken } from '../utils/generateToken.js';
+import { generateQRCode } from '../utils/generateQR.js';
+import { uploadFile } from "../utils/cloudinary.js";
+import getUri from "../utils/dataUri.js";
 const dbgr = debug("development:userController");
 
 export const userRegister = async (req, res) => {
     try {
-        let { fullname, contact, password, account_number } = req.body;
-        if (!fullname || !contact || !password || !account_number) {
+        let { email, fullname, contact, password, account_number } = req.body;
+        if (!email || !fullname || !contact || !password || !account_number) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
             });
         }
 
-        let user = await userdb.findOne({ account_number });
+        let user = await userdb.findOne({ email });
         if (user) {
             return res.status(400).json({
                 message: "User email already exists",
@@ -22,13 +25,20 @@ export const userRegister = async (req, res) => {
             });
         }
 
+        //GENERATE QR CODE
+        let buffer = generateQRCode(account_number);
+        let fileUri = getUri(buffer);
+        let cloudRes = await uploadFile(fileUri);
+
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, async (err, hash) => {
                 user = await userdb.create({
+                    email,
                     fullname,
                     contact,
                     password: hash,
-                    account_number
+                    account_number,
+                    qr : cloudRes.secure_url
                 });
             });
         });
@@ -45,18 +55,18 @@ export const userRegister = async (req, res) => {
 
 export const userLogin = async (req, res) => {
     try {
-        let { account_number, password } = req.body;
-        if (!password || !account_number) {
+        let { email, password } = req.body;
+        if (!password || !email) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
             });
         }
 
-        let user = await userdb.findOne({ account_number });
+        let user = await userdb.findOne({ email });
         if (!user) {
             return res.status(400).json({
-                message: "Account Number or Password incorrect",
+                message: "Email or Password Incorrect",
                 success: false
             });
         }
@@ -65,15 +75,16 @@ export const userLogin = async (req, res) => {
 
         if (!result) {
             return res.status(400).json({
-                message: "Account Number or Password Incorrect",
+                message: "Email or Password Incorrect",
                 success: false
             });
         }
 
         user = {
             _id: user._id,
-            account_number,
-            amount : user.amount,
+            email,
+            account_number : user.account_number,
+            balance: user.balance,
             fullname: user.fullname,
             contact: user.contact,
         }
@@ -90,7 +101,7 @@ export const userLogin = async (req, res) => {
     }
 }
 
-export const getAmount = async (req, res) => {
+export const getbalance = async (req, res) => {
     try {
         const userId = req.id;
         let user = await userdb.findOne({ _id: userId });
@@ -103,8 +114,8 @@ export const getAmount = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "User's amount fetched successfully",
-            amount: user.amount,
+            message: "User's balance fetched successfully",
+            balance: user.balance,
             success: true
         })
     } catch (error) {

@@ -5,6 +5,7 @@ import debug from 'debug';
 import connectdb from './config/mongoose-connection.js';
 
 import userRouter from "./routes/userRouter.js";
+import transactionRouter from './routes/transactionRouter.js';
 
 const app = express();
 const dbgr = debug("development:app");
@@ -15,6 +16,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 app.use("/user",userRouter);
+app.use("/transaction",transactionRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>{

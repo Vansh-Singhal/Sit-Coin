@@ -1,27 +1,29 @@
 import mongoose from "mongoose";
 
 const transactionSchema = mongoose.Schema({
-    sender : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+    sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    receiver : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+    receiver: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    amount : {
-        type : Number,
+    amount: {
+        type: Number,
+        required: true
+    },
+    status : {
+        type : String,
+        enum : ["completed","failed","reversed"],
+        default : "failed",
         required : true
     },
-    mode : {
-        type : String,
-        enum : ["qr","contact","bank"],
-        required : true,
-    },
-    date : {
-        type : Date,
-        default : Date.now()
+    mode: {
+        type: String,
+        enum: ["qr", "contact", "bank"],
+        required: true,
     }
-}, {timestamps:true} );
+}, { timestamps: true });
 
-export const transactiondb = mongoose.model('Transactions',transactionSchema);
+export const transactiondb = mongoose.model('Transactions', transactionSchema);
