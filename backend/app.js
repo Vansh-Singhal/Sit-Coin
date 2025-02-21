@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 import debug from 'debug';
 import connectdb from './config/mongoose-connection.js';
 
@@ -11,6 +12,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
 
 app.use("/user",userRouter);
 

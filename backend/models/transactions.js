@@ -15,7 +15,7 @@ const transactionSchema = mongoose.Schema({
     },
     mode : {
         type : String,
-        enum : ["QR","contact"],
+        enum : ["qr","contact","bank"],
         required : true,
     },
     date : {

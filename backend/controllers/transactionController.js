@@ -1,11 +1,11 @@
 import debug from 'debug';
 import { transactiondb } from '../models/transactions';
 
-export const getAmount = (req, res) => {
+export const createTransaction = (req, res) => {
     try {
-
+        
     } catch (error) {
-        dbgr(error.message);
+        
     }
 }
 

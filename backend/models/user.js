@@ -11,7 +11,8 @@ const userSchema = mongoose.Schema({
     },
     amount : {
         type : Number,
-        default : 100
+        default : 100,
+        required : true
     },
     contact : {
         type : Number,
