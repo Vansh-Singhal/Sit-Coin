@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const reversalSchema = mongoose.Schema({
-    date : {
-        type : Date,
-        default : Date.now()
-    },
     user : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',
@@ -21,8 +17,7 @@ const reversalSchema = mongoose.Schema({
     },
     processedBy : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Admin',
-        required : true
+        ref : 'Admin'
     },
     status : {
         type : String,

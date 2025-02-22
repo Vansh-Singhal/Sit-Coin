@@ -72,7 +72,6 @@ export const transferMoney = async (req, res) => {
     }
 };
 
-
 export const verifyTransaction = async (req, res) => {
     try {
         const transactionId = req.params.id;
