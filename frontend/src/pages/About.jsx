@@ -38,10 +38,10 @@ const AboutMain = () => {
         variants={fadeInUp}
       >
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-[#000428] ">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 ">
             About Us
           </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto ">
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-blue-500">
             We're on a mission to revolutionize the digital landscape through
             innovation and creativity.
           </p>
@@ -132,14 +132,14 @@ const TeamMemberCard = ({ name, role, description, icon, university }) => {
       <Card className="bg-white/10 backdrop-blur-sm border-none">
         <CardContent className="p-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="text-blue-400">{icon}</div>
+            <div className="text-white">{icon}</div>
             <div>
-              <h3 className="text-2xl font-bold">{name}</h3>
+              <h3 className="text-2xl font-bold text-gray-100">{name}</h3>
               <p className="text-blue-400">{role}</p>
             </div>
           </div>
-          <p className="mb-4 text-gray-200">{description}</p>
-          <p className="text-sm text-gray-300">{university}</p>
+          <p className="mb-4 text-gray-300">{description}</p>
+          <p className="text-sm text-gray-200">{university}</p>
         </CardContent>
       </Card>
     </motion.div>

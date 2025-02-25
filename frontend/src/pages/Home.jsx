@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { BiSolidZap } from "react-icons/bi";
 import { IoShieldCheckmark } from "react-icons/io5";
-import Header from "../../components/shared/Header";
-import Footer from "../../components/shared/Footer";
+import Header from "../components/shared/Header";
+import Footer from "../components/shared/Footer";
 import { Button } from "@/components/ui/button";
 
 const fadeInUp = {
@@ -40,7 +40,10 @@ const HomeMain = () => {
       animate="visible"
       variants={staggerContainer}
     >
-      <motion.h1 className="text-4xl md:text-6xl font-bold mb-6" variants={fadeInUp}>
+      <motion.h1
+        className="text-4xl md:text-6xl font-bold mb-6"
+        variants={fadeInUp}
+      >
         Welcome to <span className="text-[#000428]">SITCOIN</span>
       </motion.h1>
       <motion.p className="text-xl md:text-2xl mb-12" variants={fadeInUp}>
@@ -55,10 +58,13 @@ const HomeMain = () => {
           variants={fadeInUp}
         />
         <motion.div className="text-left max-w-md" variants={fadeInUp}>
-          <h2 className="text-3xl font-semibold mb-4">Introducing Payment Reversals</h2>
+          <h2 className="text-3xl font-semibold mb-4">
+            Introducing Payment Reversals
+          </h2>
           <p className="text-lg mb-6">
             Made a mistake? No worries! With SITCOIN, you can reverse payments
-            within minutes, giving you peace of mind and control over your transactions.
+            within minutes, giving you peace of mind and control over your
+            transactions.
           </p>
         </motion.div>
       </div>
@@ -69,7 +75,10 @@ const HomeMain = () => {
         </Button>
       </motion.div>
 
-      <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16" variants={staggerContainer}>
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+        variants={staggerContainer}
+      >
         <FeatureCard
           icon={<FaArrowCircleLeft className="h-12 w-12 text-[#000428]" />}
           title="Easy Reversals"
@@ -87,13 +96,22 @@ const HomeMain = () => {
         />
       </motion.div>
 
-      <motion.div className="bg-white/10 rounded-lg p-8 mb-16" variants={fadeInUp}>
+      <motion.div
+        className="bg-white/10 rounded-lg p-8 mb-16"
+        variants={fadeInUp}
+      >
         <h2 className="text-3xl font-semibold mb-4">How It Works</h2>
         <ol className="text-left list-decimal list-inside space-y-4">
           <li>Make a payment using SITCOIN's UPI interface</li>
-          <li>If you need to reverse the payment, open the transaction details</li>
-          <li>Click on the "Reverse Payment" option within the allowed timeframe</li>
-          <li>Confirm the reversal, and the money will be back in your account</li>
+          <li>
+            If you need to reverse the payment, open the transaction details
+          </li>
+          <li>
+            Click on the "Reverse Payment" option within the allowed timeframe
+          </li>
+          <li>
+            Confirm the reversal, and the money will be back in your account
+          </li>
         </ol>
       </motion.div>
     </motion.main>
@@ -102,7 +120,10 @@ const HomeMain = () => {
 
 const FeatureCard = ({ icon, title, description }) => {
   return (
-    <motion.div className="bg-white/10 p-6 rounded-lg text-center" variants={fadeInUp}>
+    <motion.div
+      className="bg-white/10 p-6 rounded-lg text-center"
+      variants={fadeInUp}
+    >
       <div className="flex justify-center mb-4">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p>{description}</p>
