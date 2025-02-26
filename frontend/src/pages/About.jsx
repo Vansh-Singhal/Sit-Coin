@@ -29,7 +29,6 @@ const About = () => {
 const AboutMain = () => {
   return (
     <div className="text-white min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92]">
-      {/* New Hero Section with technical dotted font */}
       <motion.section
         className="py-20 px-4 bg-white/10"
         initial="hidden"
@@ -38,10 +37,8 @@ const AboutMain = () => {
         variants={fadeInUp}
       >
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 ">
-            About Us
-          </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-blue-500">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 ">About Us</h1>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-[#000428] font-bold">
             We're on a mission to revolutionize the digital landscape through
             innovation and creativity.
           </p>
