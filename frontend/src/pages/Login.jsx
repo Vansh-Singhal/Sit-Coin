@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import { USER_API_ENDPOINT } from "@/utils/constant";
 
 const Login = () => {
   return (
@@ -37,7 +38,7 @@ const LoginMain = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/user/login",
+        `${USER_API_ENDPOINT}/login`,
         formData,
         { withCredentials: true } 
       );

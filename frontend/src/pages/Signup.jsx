@@ -47,7 +47,7 @@ const SignupMain = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/user/register",
+        `${USER_API_ENDPOINT}/register`,
         formData
       );
       console.log("Signup Success:", res.data);
