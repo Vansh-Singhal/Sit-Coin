@@ -4,7 +4,7 @@ import isLoggedIn from '../middlewares/isLoggedIn.js';
 const userRouter = express.Router();
 
 userRouter.post("/register", userRegister);
-userRouter.get("/login", userLogin);
+userRouter.post("/login", userLogin);
 userRouter.get("/get/balance", isLoggedIn, getbalance);
 userRouter.get("/logout", isLoggedIn, logoutUser);
 

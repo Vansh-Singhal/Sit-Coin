@@ -7,6 +7,7 @@ import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions.jsx";
+import Reversals from "./pages/Reversals";
 
 const AppRouter = createBrowserRouter([
   {
@@ -17,6 +18,8 @@ const AppRouter = createBrowserRouter([
     path: "/about",
     element: <About />,
   },
+
+  // AUTH ROUTES
   {
     path: "/signup",
     element: <Signup />,
@@ -25,6 +28,8 @@ const AppRouter = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+
+  //USER ROUTES
   {
     path: "/dashboard",
     element: <Dashboard />,
@@ -32,6 +37,10 @@ const AppRouter = createBrowserRouter([
   {
     path: "/transactions",
     element: <Transactions />,
+  },
+  {
+    path: "/reversals",
+    element: <Reversals />,
   },
 ]);
 

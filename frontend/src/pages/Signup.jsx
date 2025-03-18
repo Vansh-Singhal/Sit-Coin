@@ -5,9 +5,11 @@ import { FaKey } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { FaPhoneAlt } from "react-icons/fa";
-import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   return (
@@ -20,11 +22,48 @@ const Signup = () => {
 };
 
 const SignupMain = () => {
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    contact: "",
+    password: "",
+    account_number: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/user/register",
+        formData
+      );
+      console.log("Signup Success:", res.data);
+      navigate("/login");
+    } catch (err) {
+      setError(err.response?.data?.message || "Signup failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] flex items-center justify-center p-4">
       <div className="w-full max-w-md p-8 rounded-xl backdrop-blur-md bg-white/10 shadow-xl border border-white/20">
         <div className="space-y-6">
-          <div className="space-y-2 text-center">
+          <div className="text-center">
             <h1 className="text-3xl font-bold tracking-tighter text-white">
               Create an account
             </h1>
@@ -33,99 +72,76 @@ const SignupMain = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-gray-200"
-                htmlFor="fullname"
-              >
-                Full Name
-              </label>
-              <div className="relative my-1">
-                <CgProfile className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                  id="fullname"
-                  placeholder="Enter your full name"
-                  type="text"
-                />
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Input Fields */}
+            {[
+              {
+                id: "fullname",
+                label: "Full Name",
+                type: "text",
+                icon: <CgProfile />,
+              },
+              {
+                id: "email",
+                label: "Email",
+                type: "email",
+                icon: <IoIosMail />,
+              },
+              {
+                id: "contact",
+                label: "Contact Number",
+                type: "tel",
+                icon: <FaPhoneAlt />,
+              },
+              {
+                id: "account_number",
+                label: "Account Number",
+                type: "text",
+                icon: <FaRegCreditCard />,
+              },
+              {
+                id: "password",
+                label: "Password",
+                type: "password",
+                icon: <FaKey />,
+              },
+            ].map(({ id, label, type, icon }) => (
+              <div key={id} className="space-y-2">
+                <label
+                  className="text-sm font-medium text-gray-200"
+                  htmlFor={id}
+                >
+                  {label}
+                </label>
+                <div className="relative my-1">
+                  {icon && (
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      {icon}
+                    </span>
+                  )}
+                  <Input
+                    className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                    id={id}
+                    type={type}
+                    placeholder={`Enter your ${label.toLowerCase()}`}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </div>
-            </div>
+            ))}
 
-            <div className="space-y-6">
-              <label
-                className="text-sm font-medium text-gray-200"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <div className="relative my-1">
-                <IoIosMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                  id="email"
-                  placeholder="Enter your email"
-                  type="email"
-                />
-              </div>
-            </div>
+            {/* Error Message */}
+            {error && <p className="text-red-400 text-sm">{error}</p>}
 
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-gray-200"
-                htmlFor="contact"
-              >
-                Contact Number
-              </label>
-              <div className="relative my-1">
-                <FaPhoneAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                  id="contact"
-                  placeholder="Enter your contact number"
-                  type="tel"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="text-sm font-medium text-gray-200"
-                htmlFor="account_number"
-              >
-                Account Number
-              </label>
-              <div className="relative my-1">
-                <FaRegCreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                  id="account_number"
-                  placeholder="Enter your account number"
-                  type="text"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <label
-                className="text-sm font-medium text-gray-200"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <div className="relative my-1">
-                <FaKey className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                  id="password"
-                  placeholder="Create a password"
-                  type="password"
-                />
-              </div>
-            </div>
-
-            <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/10">
-              Sign Up
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/10"
+              disabled={loading}
+            >
+              {loading ? "Signing Up..." : "Sign Up"}
             </Button>
           </form>
 

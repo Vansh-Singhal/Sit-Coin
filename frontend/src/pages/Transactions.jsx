@@ -13,6 +13,7 @@ import {
   FiCreditCard,
   FiUser,
 } from "react-icons/fi";
+import React from "react";
 
 const Transactions = () => {
   return (
@@ -134,7 +135,7 @@ const TransactionsMain = () => {
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 items-center hover:bg-white/5"
               >
                 <div>
-                <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-gray-300">
+                  <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-gray-300">
                     {transaction.type}
                   </span>
                 </div>

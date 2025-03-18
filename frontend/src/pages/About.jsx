@@ -3,6 +3,7 @@ import { FaUserTie, FaCode, FaLightbulb, FaCogs } from "react-icons/fa";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import React from "react";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
