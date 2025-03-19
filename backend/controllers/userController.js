@@ -38,7 +38,7 @@ export const userRegister = async (req, res) => {
                     contact,
                     password: hash,
                     account_number,
-                    qr : cloudRes.secure_url
+                    qr: cloudRes.secure_url
                 });
             });
         });
@@ -81,9 +81,9 @@ export const userLogin = async (req, res) => {
         }
 
         user = {
-            _id: user._id,
+            id: user._id,
             email,
-            account_number : user.account_number,
+            qr: user.qr,
             balance: user.balance,
             fullname: user.fullname,
             contact: user.contact,

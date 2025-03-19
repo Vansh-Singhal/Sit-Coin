@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { USER_API_ENDPOINT } from "@/utils/constant";
+import { loginFailure, loginStart, loginSuccess } from "@/redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Login = () => {
   return (
@@ -20,10 +23,11 @@ const Login = () => {
 };
 
 const LoginMain = () => {
+  const { loading } = useSelector((state) => state.auth);
+  const { error } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -33,26 +37,21 @@ const LoginMain = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
     try {
-      const res = await axios.post(
-        `${USER_API_ENDPOINT}/login`,
-        formData,
-        { withCredentials: true } 
-      );
+      dispatch(loginStart());
+
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`, formData, {
+        withCredentials: true,
+      });
+
       console.log("Login Success:", res.data);
-
-      // Store token in localStorage
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      navigate("/dashboard"); // Redirect to dashboard after login
+      dispatch(loginSuccess(res.data));
+      navigate("/dashboard");
+      toast.success(res.data.message);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Try again.");
-    } finally {
-      setLoading(false);
+      dispatch(loginFailure(err.response?.data?.message || "Login failed"));
+      toast.error("Login failed. Try again.");
     }
   };
 

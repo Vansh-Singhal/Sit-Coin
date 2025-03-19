@@ -7,7 +7,8 @@ import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions.jsx";
-import Reversals from "./pages/Reversals";
+import Reversals from "./pages/Reversals.jsx";
+import Transfer from "./pages/Transfer.jsx";
 
 const AppRouter = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const AppRouter = createBrowserRouter([
   {
     path: "/reversals",
     element: <Reversals />,
+  },
+  {
+    path: "/send",
+    element: <Transfer />,
   },
 ]);
 
