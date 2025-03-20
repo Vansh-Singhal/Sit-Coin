@@ -77,7 +77,7 @@ const TransferMain = () => {
               <h2 className="text-lg font-semibold text-white mb-4">
                 Transfer Method
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Button
                   className={`p-3 h-auto flex flex-col items-center gap-2 ${
                     transferMethod === "upi"
