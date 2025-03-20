@@ -10,8 +10,7 @@ import {
   BiSolidBank,
   BiMobile,
   BiQr,
-  BiHistory,
-  BiStar,
+  BiHistory
 } from "react-icons/bi";
 import { FiSend, FiClock, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { Scanner } from "@yudiel/react-qr-scanner";
@@ -350,5 +349,4 @@ const TransferMain = () => {
     </main>
   );
 };
-
 export default Transfer;

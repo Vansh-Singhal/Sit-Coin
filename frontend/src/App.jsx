@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions.jsx";
 import Reversals from "./pages/Reversals.jsx";
 import Transfer from "./pages/Transfer.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 
 const AppRouter = createBrowserRouter([
   {
@@ -47,6 +48,11 @@ const AppRouter = createBrowserRouter([
     path: "/send",
     element: <Transfer />,
   },
+  //ADMIN ROUTES
+  {
+    path : "/admin/dashboard",
+    element: <AdminDashboard/>
+  }
 ]);
 
 function App() {
