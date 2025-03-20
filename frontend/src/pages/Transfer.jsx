@@ -14,6 +14,7 @@ import {
   BiStar,
 } from "react-icons/bi";
 import { FiSend, FiClock, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { Scanner } from "@yudiel/react-qr-scanner";
 
 const Transfer = () => {
   return (
@@ -28,6 +29,7 @@ const Transfer = () => {
 const TransferMain = () => {
   const [transferAmount, setTransferAmount] = useState("");
   const [transferMethod, setTransferMethod] = useState("upi");
+  const [scanResult, setScanResult] = useState(null);
 
   const recentRecipients = [
     {
@@ -100,7 +102,7 @@ const TransferMain = () => {
                   <BiSolidBank className="h-6 w-6" />
                   <span className="text-sm">Bank</span>
                 </Button>
-                
+
                 <Button
                   className={`p-3 h-auto flex flex-col items-center gap-2 ${
                     transferMethod === "qr"
@@ -183,6 +185,44 @@ const TransferMain = () => {
                       placeholder="Enter account holder name"
                     />
                   </div>
+                </div>
+              )}
+
+              {transferMethod === "qr" && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-gray-200">
+                    Scan Payee QR
+                  </h3>
+                  {/* QR SCANNER */}
+                    {!scanResult ? (
+                  <div className="QR-Scanner size-40">
+                      <Scanner
+                        classNames=""
+                        onScan={(result) => {
+                          console.log(result[0].rawValue);
+                          setScanResult(result);
+                        }}
+                      />
+                      </div>
+                    ) : (
+                      <div className="space-y-2 w-full">
+                        <label
+                          className="text-sm font-medium text-gray-200"
+                          htmlFor="accountNumber"
+                        >
+                          Account Number
+                        </label>
+                        <div className="relative">
+                          <BiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                          <Input
+                            id="accountNumber"
+                            className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                            value={scanResult[0].rawValue}
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    )}
                 </div>
               )}
 
