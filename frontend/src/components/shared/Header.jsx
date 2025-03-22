@@ -1,13 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
+import { adminLogout } from "@/redux/adminSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let logoutHandler = () => {
     dispatch(logout());
+    dispatch(adminLogout());
+    navigate("/")
   }
 
   return (

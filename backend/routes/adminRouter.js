@@ -5,7 +5,7 @@ const reversalRouter = express.Router();
 
 
 reversalRouter.post("/register", createAdmin);
-reversalRouter.get("/login", loginAdmin);
+reversalRouter.post("/login", loginAdmin);
 reversalRouter.get("/reversals/get", isLoggedIn, getAllReversals);
 
 export default reversalRouter;

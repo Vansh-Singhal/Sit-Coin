@@ -10,6 +10,10 @@ import Transactions from "./pages/Transactions.jsx";
 import Reversals from "./pages/Reversals.jsx";
 import Transfer from "./pages/Transfer.jsx";
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import AdminLogin from "./pages/Admin/AdminLogin.jsx";
+import ProtectedAdminRoute from "./components/protectedRoutes/ProtectedAdminRoute.jsx";
+import ProtectedUserRoute from "./components/protectedRoutes/ProtectedUserRoute";
+import Profile from "./pages/Profile";
 
 const AppRouter = createBrowserRouter([
   {
@@ -34,25 +38,55 @@ const AppRouter = createBrowserRouter([
   //USER ROUTES
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <ProtectedUserRoute>
+        <Dashboard />
+      </ProtectedUserRoute>
+    ),
   },
   {
     path: "/transactions",
-    element: <Transactions />,
+    element: (
+      <ProtectedUserRoute>
+        <Transactions />
+      </ProtectedUserRoute>
+    ),
   },
   {
     path: "/reversals",
-    element: <Reversals />,
+    element: (
+      <ProtectedUserRoute>
+        <Reversals />
+      </ProtectedUserRoute>
+    ),
   },
   {
     path: "/send",
-    element: <Transfer />,
+    element: (
+      <ProtectedUserRoute>
+        <Transfer />
+      </ProtectedUserRoute>
+    ),
   },
-  //ADMIN ROUTES
   {
-    path : "/admin/dashboard",
-    element: <AdminDashboard/>
-  }
+    path : "/profile",
+    element : (
+      <ProtectedUserRoute><Profile/></ProtectedUserRoute>
+    )
+  },
+  //ADMIN AUTH AND ROUTES
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <ProtectedAdminRoute>
+        <AdminDashboard />
+      </ProtectedAdminRoute>
+    ),
+  },
 ]);
 
 function App() {

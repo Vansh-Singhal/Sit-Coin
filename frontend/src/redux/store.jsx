@@ -9,6 +9,8 @@ import {
   REGISTER,
 } from "redux-persist";
 import authSlice from "./authSlice.jsx";
+import adminSlice from "./adminSlice.jsx";
+import transactionSlice from "./transactionSlice.jsx";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
@@ -19,7 +21,10 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authSlice,
+  admin: adminSlice,
+  transactions : transactionSlice,
 });
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({

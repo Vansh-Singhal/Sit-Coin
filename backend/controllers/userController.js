@@ -87,6 +87,8 @@ export const userLogin = async (req, res) => {
             balance: user.balance,
             fullname: user.fullname,
             contact: user.contact,
+            account_number : user.account_number,
+            createdAt : user.createdAt
         }
 
         let token = generateToken(user);
