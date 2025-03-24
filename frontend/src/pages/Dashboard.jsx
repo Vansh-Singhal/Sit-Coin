@@ -32,13 +32,14 @@ const DashboardMain = () => {
   // 1. Total Balance (directly from user data)
   const totalBalance = `₹${user?.balance}`;
 
-  // 2. Monthly Spending (sent transactions in the current month)
+  // 2. Monthly Spending (sent transactions in the current month that are completed)
   const monthlySpending = transactions
     .filter((transaction) => {
       const transactionDate = new Date(transaction.createdAt);
       return (
+        transaction.status === "completed" && // Only completed transactions
         transaction.sender._id === user?._id && // Only transactions where user is the sender
-        transactionDate.getMonth() === currentMonth && // Filter for current month
+        transactionDate.getMonth() === currentMonth && // Filter for the current month
         transactionDate.getFullYear() === currentYear // Filter for the current year
       );
     })
@@ -46,9 +47,14 @@ const DashboardMain = () => {
 
   const totalMonthlySpending = `₹${monthlySpending}`;
 
-  // 3. Total Savings (received transactions)
+  // 3. Total Savings (received transactions that are completed)
   const totalSavings = transactions
-    .filter((transaction) => transaction.receiver._id === user?._id) // Only transactions where the user is the receiver
+    .filter((transaction) => {
+      return (
+        transaction.status === "completed" && // Only completed transactions
+        transaction.receiver._id === user?._id // Only transactions where the user is the receiver
+      );
+    })
     .reduce((total, transaction) => total + transaction.amount, 0);
 
   const totalSavingsAmount = `₹${totalSavings}`;
@@ -121,16 +127,20 @@ const DashboardMain = () => {
             </Button>
           </div>
           <div className="space-y-4">
-            {transactions.map(({ _id, sender, receiver, amount, createdAt }) => (
-              <TransactionItem
-                key={_id}
-                senderName={sender.fullname}  // Accessing sender's fullname
-                receiverName={receiver.fullname}  // Accessing receiver's fullname
-                amount={`₹${amount}`}
-                type={sender._id === user?._id ? "sent" : "received"}
-                date={new Date(createdAt).toLocaleString()}
-              />
-            ))}
+            {transactions.map((transaction) =>
+              transaction.status !== "failed" ? (
+                <TransactionItem
+                  key={transaction._id} // Use transaction._id for the key
+                  senderName={transaction.sender.fullname} // Accessing sender's fullname
+                  receiverName={transaction.receiver.fullname} // Accessing receiver's fullname
+                  amount={`₹${transaction.amount}`} // Displaying the amount
+                  type={
+                    transaction.sender._id === user?._id ? "sent" : "received"
+                  } // Checking if the sender is the logged-in user
+                  date={new Date(transaction.createdAt).toLocaleString()} // Formatting the date
+                />
+              ) : null
+            )}
           </div>
         </div>
       </div>
@@ -138,7 +148,7 @@ const DashboardMain = () => {
   );
 };
 
-const BalanceCard = ({ title, amount, icon}) => (
+const BalanceCard = ({ title, amount, icon }) => (
   <div className="p-6 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 space-y-2">
     <div className="flex items-center justify-between">
       <p className="text-gray-200">{title}</p>
@@ -155,7 +165,9 @@ const ActionButton = ({ icon, label }) => (
   </Button>
 );
 
-const TransactionItem = ({ senderName, receiverName, amount, type, date }) => (
+const TransactionItem = ({ senderName, receiverName, amount, type, date }) => {
+  const {user} = useSelector((state) => state.auth);
+  return (
   <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5">
     <div className="flex items-center gap-4">
       <div
@@ -170,7 +182,10 @@ const TransactionItem = ({ senderName, receiverName, amount, type, date }) => (
         )}
       </div>
       <div>
-        <p className="font-medium text-white">{senderName} to {receiverName}</p>
+        <p className="font-medium text-white">
+          {senderName === user?.fullname ? receiverName : senderName}
+        </p>
+
         <p className="text-sm text-gray-300">{date}</p>
       </div>
     </div>
@@ -182,6 +197,6 @@ const TransactionItem = ({ senderName, receiverName, amount, type, date }) => (
       {`${type === "sent" ? "-" : "+"}`} {amount}
     </p>
   </div>
-);
+)};
 
 export default Dashboard;
