@@ -2,18 +2,9 @@ import Footer from "@/components/shared/Footer";
 import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BiWallet, BiSearch, BiFilterAlt, BiDownload } from "react-icons/bi";
-import {
-  FiArrowUpRight,
-  FiArrowDownLeft,
-  FiShoppingBag,
-  FiCoffee,
-  FiHome,
-  FiSmartphone,
-  FiCreditCard,
-  FiUser,
-} from "react-icons/fi";
+import { BiSearch, BiFilterAlt, BiDownload } from "react-icons/bi";
 import React from "react";
+import { useSelector } from "react-redux"; // Assuming you are using Redux for state management
 
 const Transactions = () => {
   return (
@@ -26,71 +17,8 @@ const Transactions = () => {
 };
 
 const TransactionsMain = () => {
-  const transactions = [
-    {
-      id: 1,
-      name: "John Doe",
-      amount: "-₹500",
-      type: "sent",
-      date: "Today, 2:30 PM",
-      status: "Completed",
-      icon: <FiUser />,
-    },
-    {
-      id: 2,
-      name: "Amazon Shopping",
-      amount: "-₹1,200",
-      type: "sent",
-      date: "Today, 11:20 AM",
-      status: "Completed",
-      icon: <FiShoppingBag />,
-    },
-    {
-      id: 3,
-      name: "Electric Bill",
-      amount: "-₹2,000",
-      type: "sent",
-      date: "Yesterday, 6:45 PM",
-      status: "Completed",
-      icon: <FiHome />,
-    },
-    {
-      id: 4,
-      name: "Salary Credit",
-      amount: "+₹45,000",
-      type: "received",
-      date: "Yesterday, 3:15 PM",
-      status: "Completed",
-      icon: <BiWallet />,
-    },
-    {
-      id: 5,
-      name: "Starbucks Coffee",
-      amount: "-₹350",
-      type: "sent",
-      date: "24 Feb, 9:30 AM",
-      status: "Completed",
-      icon: <FiCoffee />,
-    },
-    {
-      id: 6,
-      name: "Mobile Recharge",
-      amount: "-₹799",
-      type: "sent",
-      date: "23 Feb, 5:20 PM",
-      status: "Completed",
-      icon: <FiSmartphone />,
-    },
-    {
-      id: 7,
-      name: "Credit Card Payment",
-      amount: "-₹5,000",
-      type: "sent",
-      date: "22 Feb, 4:45 PM",
-      status: "Completed",
-      icon: <FiCreditCard />,
-    },
-  ];
+  const { transactions } = useSelector((state) => state.transactions);  // Assuming you're fetching transactions from Redux store
+  const { user } = useSelector((state) => state.auth);  // Assuming user info is in Redux store
 
   return (
     <main className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] p-6">
@@ -131,26 +59,30 @@ const TransactionsMain = () => {
           <div className="divide-y divide-white/10">
             {transactions.map((transaction) => (
               <div
-                key={transaction.id}
+                key={transaction._id}
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 items-center hover:bg-white/5"
               >
                 <div>
                   <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-gray-300">
-                    {transaction.type}
+                    {transaction.sender._id === user._id ? "Sent" : "Received"}
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-white">{transaction.name}</p>
-                  <p className="text-sm text-gray-400">{transaction.date}</p>
+                  <p className="font-medium text-white">
+                    {transaction.sender.fullname} to {transaction.receiver.fullname}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    {new Date(transaction.createdAt).toLocaleString()}
+                  </p>
                 </div>
                 <div
                   className={`font-medium ${
-                    transaction.type === "sent"
+                    transaction.sender._id === user._id
                       ? "text-red-400"
                       : "text-green-400"
                   }`}
                 >
-                  {transaction.amount}
+                  ₹{transaction.amount}
                 </div>
                 <div>
                   <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-gray-300">

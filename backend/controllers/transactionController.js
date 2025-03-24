@@ -8,7 +8,7 @@ export const transferMoney = async (req, res) => {
     try {
         const { amount, mode, receiverId } = req.body;
         const senderId = req.id;
-
+        
         // Validate inputs
         if (!senderId || !receiverId || !amount || amount <= 0 || !mode) {
             return res.status(400).json({
@@ -101,7 +101,10 @@ export const getUserTransactions = async (req, res) => {
     try {
         const transactions = await transactiondb.find({
             $or: [{ sender: req.id }, { receiver: req.id }]
-        }).sort({ createdAt: -1 });
+        })
+        .populate('sender', 'fullname') // Populating sender with selected fields
+        .populate('receiver', 'fullname') // Populating receiver with selected fields
+        .sort({ createdAt: -1 });
 
         res.status(200).json({
             message: "Transactions fetched successfully",
@@ -110,6 +113,10 @@ export const getUserTransactions = async (req, res) => {
         });
 
     } catch (error) {
-        dbgr(error.message);
+        console.error(error.message); // Used console.error for proper logging
+        res.status(500).json({
+            message: "Failed to fetch transactions",
+            success: false
+        });
     }
 };

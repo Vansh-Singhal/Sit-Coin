@@ -1,27 +1,34 @@
-import { fetchTransactionsStart, fetchTransactionsSuccess } from "@/redux/transactionSlice";
+import {
+  fetchTransactionsFailure,
+  fetchTransactionsStart,
+  fetchTransactionsSuccess,
+} from "@/redux/transactionSlice";
 import { TRANSACTION_API_ENDPOINT } from "@/utils/constant";
+import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const useGetAllTransactions = (userId) => {
+const useGetAllTransactions = () => {
   const dispatch = useDispatch();
-
   useEffect(() => {
     const fetchAllTransactions = async () => {
       try {
-        dispatch(fetchTransactionsStart())
+        dispatch(fetchTransactionsStart());
 
-        const res = await axios.get(`${TRANSACTION_API_ENDPOINT}/verify/${userId}`, {
+        const res = await axios.get(`${TRANSACTION_API_ENDPOINT}/get/all`, {
           withCredentials: true,
         });
 
-        if (res.data.success){
-            dispatch(fetchTransactionsSuccess(res.data.transaction))
+        if (res.data.success) {
+          console.log(res.data);
+          dispatch(fetchTransactionsSuccess(res.data.transactions));
         }
       } catch (error) {
-        console.warn(error);
+        dispatch(fetchTransactionsFailure(error.response?.data?.message || "Fetching trasactions failed"));
       }
     };
+
+    fetchAllTransactions();
   }, []);
 };
 

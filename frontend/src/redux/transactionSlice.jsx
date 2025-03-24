@@ -10,12 +10,13 @@ const transactionSlice = createSlice({
   },
   reducers: {
     fetchTransactionsStart: (state) => {
+      state.transactions = [];
       state.loading = true;
       state.error = null;
     },
     fetchTransactionsSuccess: (state, action) => {
       state.loading = false;
-      state.transactions = action.payload.transactions; // Save fetched transactions
+      state.transactions = action.payload; // Save fetched transactions
     },
     fetchTransactionsFailure: (state, action) => {
       state.loading = false;

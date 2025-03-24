@@ -6,46 +6,48 @@ import { FaHistory, FaCreditCard, FaUser } from "react-icons/fa";
 import { BiSolidBellRing } from "react-icons/bi";
 import { GoArrowUpRight, GoArrowDownLeft } from "react-icons/go";
 import React from "react";
+import { useSelector } from "react-redux";
 
-const Dashboard = () => (
-  <>
-    <Header />
-    <DashboardMain />
-    <Footer />
-  </>
-);
+const Dashboard = () => {
+  return (
+    <>
+      <Header />
+      <DashboardMain />
+      <Footer />
+    </>
+  );
+};
 
 const DashboardMain = () => {
-  const recentTransactions = [
-    {
-      id: 1,
-      name: "John Doe",
-      amount: "-₹500",
-      type: "sent",
-      date: "Today, 2:30 PM",
-    },
-    {
-      id: 2,
-      name: "Amazon Pay",
-      amount: "+₹1200",
-      type: "received",
-      date: "Today, 11:20 AM",
-    },
-    {
-      id: 3,
-      name: "Electric Bill",
-      amount: "-₹2000",
-      type: "sent",
-      date: "Yesterday, 6:45 PM",
-    },
-    {
-      id: 4,
-      name: "Sarah Smith",
-      amount: "+₹750",
-      type: "received",
-      date: "Yesterday, 3:15 PM",
-    },
-  ];
+  const { transactions } = useSelector((state) => state.transactions);
+  const { user } = useSelector((state) => state.auth);
+
+  const currentMonth = new Date().getMonth(); // Get the current month (0-11)
+  const currentYear = new Date().getFullYear(); // Get the current year (e.g., 2025)
+
+  // 1. Total Balance (directly from user data)
+  const totalBalance = `₹${user?.balance}`;
+
+  // 2. Monthly Spending (sent transactions in the current month)
+  const monthlySpending = transactions
+    .filter((transaction) => {
+      const transactionDate = new Date(transaction.createdAt);
+      return (
+        transaction.sender._id === user?._id && // Only transactions where user is the sender
+        transactionDate.getMonth() === currentMonth && // Filter for current month
+        transactionDate.getFullYear() === currentYear // Filter for the current year
+      );
+    })
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const totalMonthlySpending = `₹${monthlySpending}`;
+
+  // 3. Total Savings (received transactions)
+  const totalSavings = transactions
+    .filter((transaction) => transaction.receiver._id === user?._id) // Only transactions where the user is the receiver
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const totalSavingsAmount = `₹${totalSavings}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] p-6">
@@ -54,7 +56,7 @@ const DashboardMain = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">
-              Welcome back, Alex
+              Welcome back, {user?.fullname}
             </h1>
             <p className="text-gray-200">
               Manage your transactions and payments
@@ -68,25 +70,19 @@ const DashboardMain = () => {
         {/* Balance Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <BalanceCard
-            title="Total Balance"
-            amount="₹45,250"
-            change="+2.5%"
+            title="Available Balance"
+            amount={totalBalance}
             icon={<IoWallet className="size-6" />}
-            changeColor="text-green-300"
           />
           <BalanceCard
-            title="Monthly Spending"
-            amount="₹12,500"
-            change="-4.2%"
+            title="Monthly Expenses"
+            amount={totalMonthlySpending}
             icon={<FaCreditCard className="size-6" />}
-            changeColor="text-red-300"
           />
           <BalanceCard
-            title="Total Savings"
-            amount="₹28,350"
-            change="+8.1%"
+            title="Savings Balance"
+            amount={totalSavingsAmount}
             icon={<FaHistory className="size-6" />}
-            changeColor="text-green-300"
           />
         </div>
 
@@ -121,13 +117,14 @@ const DashboardMain = () => {
             </Button>
           </div>
           <div className="space-y-4">
-            {recentTransactions.map(({ id, name, amount, type, date }) => (
+            {transactions.map(({ _id, sender, receiver, amount, createdAt }) => (
               <TransactionItem
-                key={id}
-                name={name}
-                amount={amount}
-                type={type}
-                date={date}
+                key={_id}
+                senderName={sender.fullname}  // Accessing sender's fullname
+                receiverName={receiver.fullname}  // Accessing receiver's fullname
+                amount={`₹${amount}`}
+                type={sender._id === user?._id ? "sent" : "received"}
+                date={new Date(createdAt).toLocaleString()}
               />
             ))}
           </div>
@@ -137,14 +134,13 @@ const DashboardMain = () => {
   );
 };
 
-const BalanceCard = ({ title, amount, change, icon, changeColor }) => (
+const BalanceCard = ({ title, amount, icon}) => (
   <div className="p-6 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 space-y-2">
     <div className="flex items-center justify-between">
       <p className="text-gray-200">{title}</p>
       <div className="h-5 w-5 text-blue-300">{icon}</div>
     </div>
     <h2 className="text-3xl font-bold text-white">{amount}</h2>
-    <p className={`text-sm ${changeColor}`}>{change} from last month</p>
   </div>
 );
 
@@ -155,7 +151,7 @@ const ActionButton = ({ icon, label }) => (
   </Button>
 );
 
-const TransactionItem = ({ name, amount, type, date }) => (
+const TransactionItem = ({ senderName, receiverName, amount, type, date }) => (
   <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5">
     <div className="flex items-center gap-4">
       <div
@@ -170,7 +166,7 @@ const TransactionItem = ({ name, amount, type, date }) => (
         )}
       </div>
       <div>
-        <p className="font-medium text-white">{name}</p>
+        <p className="font-medium text-white">{senderName} to {receiverName}</p>
         <p className="text-sm text-gray-300">{date}</p>
       </div>
     </div>
@@ -179,7 +175,7 @@ const TransactionItem = ({ name, amount, type, date }) => (
         type === "sent" ? "text-red-300" : "text-green-300"
       }`}
     >
-      {amount}
+      {`${type === "sent" ? "-" : "+"}`} {amount}
     </p>
   </div>
 );

@@ -22,7 +22,6 @@ const isLoggedIn = async (req,res,next) => {
                 success: false
             });
         }
-
         req.id = decoded.id;
         next();
     }

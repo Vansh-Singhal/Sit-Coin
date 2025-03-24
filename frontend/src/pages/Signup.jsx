@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { USER_API_ENDPOINT } from "@/utils/constant";
 
 const Signup = () => {
   return (
@@ -53,6 +54,7 @@ const SignupMain = () => {
       console.log("Signup Success:", res.data);
       navigate("/login");
     } catch (err) {
+      console.log(err);
       setError(err.response?.data?.message || "Signup failed. Try again.");
     } finally {
       setLoading(false);
