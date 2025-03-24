@@ -17,8 +17,8 @@ const Transactions = () => {
 };
 
 const TransactionsMain = () => {
-  const { transactions } = useSelector((state) => state.transactions);  // Assuming you're fetching transactions from Redux store
-  const { user } = useSelector((state) => state.auth);  // Assuming user info is in Redux store
+  const { transactions } = useSelector((state) => state.transactions); // Assuming you're fetching transactions from Redux store
+  const { user } = useSelector((state) => state.auth); // Assuming user info is in Redux store
 
   return (
     <main className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] p-6">
@@ -64,12 +64,13 @@ const TransactionsMain = () => {
               >
                 <div>
                   <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-gray-300">
-                    {transaction.sender._id === user._id ? "Sent" : "Received"}
+                    {transaction.sender._id === user?._id ? "Sent" : "Received"}
                   </span>
                 </div>
                 <div>
                   <p className="font-medium text-white">
-                    {transaction.sender.fullname} to {transaction.receiver.fullname}
+                    {transaction.sender.fullname} to{" "}
+                    {transaction.receiver.fullname}
                   </p>
                   <p className="text-sm text-gray-400">
                     {new Date(transaction.createdAt).toLocaleString()}
@@ -77,7 +78,7 @@ const TransactionsMain = () => {
                 </div>
                 <div
                   className={`font-medium ${
-                    transaction.sender._id === user._id
+                    transaction.sender._id === user?._id
                       ? "text-red-400"
                       : "text-green-400"
                   }`}

@@ -7,8 +7,12 @@ import { BiSolidBellRing } from "react-icons/bi";
 import { GoArrowUpRight, GoArrowDownLeft } from "react-icons/go";
 import React from "react";
 import { useSelector } from "react-redux";
+import useGetAllTransactions from "@/hooks/useGetAllTransactions";
+import useGetUserBalance from "@/hooks/useGetUserBalance";
 
 const Dashboard = () => {
+  useGetAllTransactions();
+  useGetUserBalance();
   return (
     <>
       <Header />
