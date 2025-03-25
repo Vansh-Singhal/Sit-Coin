@@ -14,6 +14,9 @@ import {
 } from "react-icons/bi";
 import { FiSend, FiClock, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { Scanner } from "@yudiel/react-qr-scanner";
+import { TRANSACTION_API_ENDPOINT } from "@/utils/constant";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Transfer = () => {
   return (
@@ -26,38 +29,65 @@ const Transfer = () => {
 };
 
 const TransferMain = () => {
-  const [transferAmount, setTransferAmount] = useState("");
   const [transferMethod, setTransferMethod] = useState("upi");
   const [scanResult, setScanResult] = useState(null);
+  const [formData, setFormData] = useState({
+    contact: "",
+    amount: 0,
+    account_number: "",
+    mode: "upi",
+    note: "",
+  });
+
+  const handleSubmit = async () => {
+    if (formData.mode === "upi") formData.account_number = "";
+    else if (formData.mode === "bank") formData.contact = "";
+    else {
+      formData.account_number = scanResult[0].rawValue;
+      formData.contact = "";
+    }
+
+    try {
+      const res = await axios.post(`${TRANSACTION_API_ENDPOINT}/create`, formData, {
+        withCredentials: true,
+      });
+
+      console.log(res.data);
+      toast.success("Transaction completed");
+    } catch (error) {
+      console.warn(error);
+      toast.error("Transacion failed");
+    }
+
+
+  }
 
   const recentRecipients = [
-    {
-      id: 1,
-      name: "John Doe",
-      upiId: "johndoe@okbank",
-      image: null,
-    },
-    {
-      id: 2,
-      name: "Sarah Smith",
-      upiId: "sarah@okbank",
-      image: null,
-    },
-    {
-      id: 3,
-      name: "Alex Johnson",
-      upiId: "alex@okbank",
-      image: null,
-    },
-    {
-      id: 4,
-      name: "Priya Sharma",
-      upiId: "priya@okbank",
-      image: null,
-    },
+    { id: 1, name: "John Doe", upiId: "johndoe@okbank", image: null },
+    { id: 2, name: "Sarah Smith", upiId: "sarah@okbank", image: null },
+    { id: 3, name: "Alex Johnson", upiId: "alex@okbank", image: null },
+    { id: 4, name: "Priya Sharma", upiId: "priya@okbank", image: null },
   ];
 
   const quickAmounts = [500, 1000, 2000, 5000, 10000, 50000];
+
+  // Handle form data changes
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
+  // Handle payment method change
+  const handlePaymentMethodChange = (method) => {
+    setTransferMethod(method);
+    setFormData((prevState) => ({
+      ...prevState,
+      mode: method,
+    }));
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] p-6">
@@ -85,7 +115,7 @@ const TransferMain = () => {
                       ? "bg-white/20"
                       : "bg-white/10 hover:bg-white/15"
                   }`}
-                  onClick={() => setTransferMethod("upi")}
+                  onClick={() => handlePaymentMethodChange("upi")}
                 >
                   <BiMobile className="h-6 w-6" />
                   <span className="text-sm">UPI</span>
@@ -96,7 +126,7 @@ const TransferMain = () => {
                       ? "bg-white/20"
                       : "bg-white/10 hover:bg-white/15"
                   }`}
-                  onClick={() => setTransferMethod("bank")}
+                  onClick={() => handlePaymentMethodChange("bank")}
                 >
                   <BiSolidBank className="h-6 w-6" />
                   <span className="text-sm">Bank</span>
@@ -108,7 +138,7 @@ const TransferMain = () => {
                       ? "bg-white/20"
                       : "bg-white/10 hover:bg-white/15"
                   }`}
-                  onClick={() => setTransferMethod("qr")}
+                  onClick={() => handlePaymentMethodChange("qr")}
                 >
                   <BiQr className="h-6 w-6" />
                   <span className="text-sm">Scan QR</span>
@@ -127,7 +157,7 @@ const TransferMain = () => {
                   <div className="space-y-2">
                     <label
                       className="text-sm font-medium text-gray-200"
-                      htmlFor="upiId"
+                      htmlFor="contact"
                     >
                       UPI ID / Mobile Number
                     </label>
@@ -135,8 +165,10 @@ const TransferMain = () => {
                       <BiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                       <Input
                         className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                        id="upiId"
+                        id="contact"
                         placeholder="Enter UPI ID or mobile number"
+                        value={formData.contact}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -148,40 +180,16 @@ const TransferMain = () => {
                   <div className="space-y-2">
                     <label
                       className="text-sm font-medium text-gray-200"
-                      htmlFor="accountNumber"
+                      htmlFor="account_number"
                     >
                       Account Number
                     </label>
                     <Input
                       className="w-full bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                      id="accountNumber"
+                      id="account_number"
                       placeholder="Enter account number"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      className="text-sm font-medium text-gray-200"
-                      htmlFor="ifsc"
-                    >
-                      IFSC Code
-                    </label>
-                    <Input
-                      className="w-full bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                      id="ifsc"
-                      placeholder="Enter IFSC code"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      className="text-sm font-medium text-gray-200"
-                      htmlFor="accountName"
-                    >
-                      Account Holder Name
-                    </label>
-                    <Input
-                      className="w-full bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                      id="accountName"
-                      placeholder="Enter account holder name"
+                      value={formData.account_number}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -193,8 +201,8 @@ const TransferMain = () => {
                     Scan Payee QR
                   </h3>
                   {/* QR SCANNER */}
-                    {!scanResult ? (
-                  <div className="QR-Scanner size-40">
+                  {!scanResult ? (
+                    <div className="QR-Scanner size-40">
                       <Scanner
                         classNames=""
                         onScan={(result) => {
@@ -202,26 +210,26 @@ const TransferMain = () => {
                           setScanResult(result);
                         }}
                       />
+                    </div>
+                  ) : (
+                    <div className="space-y-2 w-full">
+                      <label
+                        className="text-sm font-medium text-gray-200"
+                        htmlFor="account_number"
+                      >
+                        Account Number
+                      </label>
+                      <div className="relative">
+                        <BiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        <Input
+                          id="account_number"
+                          className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                          value={scanResult[0].rawValue}
+                          readOnly
+                        />
                       </div>
-                    ) : (
-                      <div className="space-y-2 w-full">
-                        <label
-                          className="text-sm font-medium text-gray-200"
-                          htmlFor="accountNumber"
-                        >
-                          Account Number
-                        </label>
-                        <div className="relative">
-                          <BiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                          <Input
-                            id="accountNumber"
-                            className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                            value={scanResult[0].rawValue}
-                            readOnly
-                          />
-                        </div>
-                      </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -238,8 +246,8 @@ const TransferMain = () => {
                     className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400"
                     id="amount"
                     placeholder="Enter amount"
-                    value={transferAmount}
-                    onChange={(e) => setTransferAmount(e.target.value)}
+                    value={formData.amount}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -248,7 +256,9 @@ const TransferMain = () => {
                       key={amount}
                       variant="outline"
                       className="border-white/10 text-black hover:bg-gray-200"
-                      onClick={() => setTransferAmount(amount.toString())}
+                      onClick={() =>
+                        setFormData((prev) => ({ ...prev, amount }))
+                      }
                     >
                       ₹{amount}
                     </Button>
@@ -268,12 +278,14 @@ const TransferMain = () => {
                   id="note"
                   placeholder="Add a note"
                   rows={2}
+                  value={formData.note}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
 
             {/* Transfer Button */}
-            <Button className="w-full py-6 text-lg bg-white/10 hover:bg-white/20 text-white gap-2">
+            <Button className="w-full py-6 text-lg bg-white/10 hover:bg-white/20 text-white gap-2" onClick = {handleSubmit}>
               <FiSend className="h-5 w-5" />
               Transfer Money
             </Button>
@@ -318,9 +330,7 @@ const TransferMain = () => {
 
             {/* Transfer Info */}
             <div className="rounded-xl backdrop-blur-md bg-white/10 border border-white/20 p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-white">
-                Transfer Info
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Transfer Info</h2>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <FiClock className="h-5 w-5 text-blue-400 mt-0.5" />
@@ -336,9 +346,9 @@ const TransferMain = () => {
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <FiAlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
+                  <FiAlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
                   <p className="text-sm text-gray-300">
-                    Daily transfer limit: ₹1,00,000
+                    Double-check recipient information to avoid errors.
                   </p>
                 </div>
               </div>
@@ -349,4 +359,5 @@ const TransferMain = () => {
     </main>
   );
 };
+
 export default Transfer;
