@@ -59,62 +59,62 @@ const TransactionsMain = () => {
           </div>
 
           <div className="divide-y divide-white/10">
-            {transactions.map((transaction) => (
-              <div
-                key={transaction._id}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 items-center hover:bg-white/5"
-              >
-                {/* Transaction Type with Icons */}
-                <div>
-                  <span className="px-2 py-1 rounded-full text-xs text-gray-300">
-                    {transaction.status === "failed" ? (
-                      <MdError className="h-5 w-5 text-red-500" /> // Error icon for failed transactions
-                    ) : transaction.sender._id === user?._id ? (
-                      <GoArrowUpRight className="h-5 w-5 text-red-400" /> // Sent icon
-                    ) : (
-                      <GoArrowDownLeft className="h-5 w-5 text-green-400" /> // Received icon
-                    )}
-                  </span>
-                </div>
-
-                {/* Details */}
-                <div>
-                  <p className="font-medium text-white">
-                    {/* Display the other person's name based on the transaction type */}
-                    {transaction.sender._id === user?._id
-                      ? `${transaction.receiver.fullname}`
-                      : `${transaction.sender.fullname}`}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    {new Date(transaction.createdAt).toLocaleString()}
-                  </p>
-                </div>
-
-                {/* Amount */}
+              {transactions.map((transaction) => (
                 <div
-                  className={`font-medium ${
-                    transaction.sender._id === user?._id
-                      ? "text-red-400" // If the user is the sender, use red for the amount
-                      : "text-green-400" // If the user is the receiver, use green for the amount
-                  }`}
+                  key={transaction._id}
+                  className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 items-center hover:bg-white/5"
                 >
-                  ₹{transaction.amount}
-                </div>
+                  {/* Transaction Type with Icons */}
+                  <div>
+                    <span className="px-2 py-1 rounded-full text-xs text-gray-300">
+                      {transaction.status === "failed" ? (
+                        <MdError className="h-5 w-5 text-red-500" /> // Error icon for failed transactions
+                      ) : transaction.sender._id === user?._id ? (
+                        <GoArrowUpRight className="h-5 w-5 text-red-400" /> // Sent icon
+                      ) : (
+                        <GoArrowDownLeft className="h-5 w-5 text-green-400" /> // Received icon
+                      )}
+                    </span>
+                  </div>
 
-                {/* Status */}
-                <div>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      transaction.status === "failed"
-                        ? "bg-red-500"
-                        : "bg-white/10"
-                    } text-gray-300`}
+                  {/* Details */}
+                  <div>
+                    <p className="font-medium text-white">
+                      {/* Display the other person's name based on the transaction type */}
+                      {transaction.sender._id === user?._id
+                        ? `${transaction.receiver.fullname}`
+                        : `${transaction.sender.fullname}`}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {new Date(transaction.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+
+                  {/* Amount */}
+                  <div
+                    className={`font-medium ${
+                      transaction.sender._id === user?._id
+                        ? "text-red-400" // If the user is the sender, use red for the amount
+                        : "text-green-400" // If the user is the receiver, use green for the amount
+                    }`}
                   >
-                    {transaction.status}
-                  </span>
+                    ₹{transaction.amount}
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        transaction.status === "failed"
+                          ? "bg-red-500"
+                          : "bg-white/10"
+                      } text-gray-300`}
+                    >
+                      {transaction.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

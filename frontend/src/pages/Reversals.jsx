@@ -20,6 +20,7 @@ import {
   FiClock,
 } from "react-icons/fi";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const Reversals = () => {
   return (
@@ -32,6 +33,9 @@ const Reversals = () => {
 };
 
 const ReversalsMain = () => {
+  let { transactions } = useSelector((state)=> state.transactions);
+  transactions = transactions.filter((item)=>item.status !== "failed");
+
   const reversalRequests = [
     {
       id: 1,
@@ -185,27 +189,27 @@ const ReversalsMain = () => {
 
           {/* Table Body */}
           <div className="divide-y divide-white/10">
-            {reversalRequests.map((request) => (
+            {transactions.map((request) => (
               <div
-                key={request.id}
+                key={request._id}
                 className="grid grid-cols-[1fr_auto_auto] md:grid-cols-[1fr_auto_auto_auto_auto] gap-4 p-4 items-center hover:bg-white/5"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-full bg-white/10">
-                    {request.icon}
+                    {request.mode}
                   </div>
                   <div>
-                    <p className="font-medium text-white">{request.name}</p>
+                    <p className="font-medium text-white">{request.sender.fullname}</p>
                     <p className="text-sm text-red-400">-{request.amount}</p>
                   </div>
                 </div>
 
                 <div className="hidden md:block text-gray-300 text-sm">
-                  {request.transactionId}
+                  {request._id}
                 </div>
 
                 <div className="hidden md:block text-gray-300 text-sm">
-                  {request.date}
+                {new Date(request.createdAt).toLocaleString()}
                 </div>
 
                 <div className="flex items-center gap-2">

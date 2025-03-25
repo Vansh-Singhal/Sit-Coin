@@ -3,6 +3,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateToken } from "../utils/generateToken.js";
 import { reversaldb } from "../models/reversals.js";
+import { userdb } from "../models/user.js";
+import { transactiondb } from "../models/transactions.js";
+import debug from 'debug';
+
+const dbgr = debug("development:adminController")
 
 export const createAdmin = async (req,res) => {
     try {
@@ -70,9 +75,27 @@ export const loginAdmin = async (req, res) => {
 
 export const getAllReversals = async (req, res) => {
     try {
-        const reversals = await reversaldb.find({ status: "pending" }).sort({ createdAt: -1 });
+        const reversals = await reversaldb.find({ }).sort({ createdAt: -1 });
         res.status(200).json({ message: "Reversals fetched successfully", reversals, success: true });
     } catch (error) {
         dbgr(error.message);
     }
 };
+
+export const getAllUsers = async (req,res) => {
+    try {
+        const users = await userdb.find({ }).sort({ createdAt: -1 });
+        res.status(200).json({ message: "Users fetched successfully", users, success: true });
+    } catch (error) {
+        dbgr(error.message);
+    }
+}
+
+export const getAllTransactions = async (req,res) => {
+    try {
+        const transactions = await transactiondb.find({ }).sort({ createdAt: -1 });
+        res.status(200).json({ message: "Users fetched successfully", transactions, success: true });
+    } catch (error) {
+        dbgr(error.message);
+    }
+}
