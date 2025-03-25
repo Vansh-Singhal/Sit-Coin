@@ -47,14 +47,13 @@ const SignupMain = () => {
     setError("");
 
     try {
-      const res = await axios.post(
-        `${USER_API_ENDPOINT}/register`,
-        formData
-      );
+      const res = await axios.post(`${USER_API_ENDPOINT}/register`, formData);
       console.log("Signup Success:", res.data);
+      toast.success(res.data.message);
       navigate("/login");
     } catch (err) {
       console.log(err);
+      toast.error("Signup failed. Try again.");
       setError(err.response?.data?.message || "Signup failed. Try again.");
     } finally {
       setLoading(false);

@@ -39,13 +39,13 @@ export const transferMoney = async (req, res) => {
         // Check sufficient balance
         if (sender.balance < amount) {
             const transaction = await transactiondb.create({
-                sender : sender_id,
-                receiver : receiver_id,
+                sender: sender_id,
+                receiver: receiver_id,
                 amount,
                 mode,
                 status: "failed"
             });
-            return res.status(400).json({ message: "Insufficient balance",transaction , success: false });
+            return res.status(400).json({ message: "Insufficient balance", transaction, success: false });
         }
 
         // Deduct from sender and add to receiver
@@ -58,14 +58,14 @@ export const transferMoney = async (req, res) => {
 
         // Create transaction record
         const transaction = await transactiondb.create({
-            sender : sender_id,
-            receiver : receiver_id,
+            sender: sender_id,
+            receiver: receiver_id,
             amount,
             mode,
             status: "completed"
         });
 
-        return res.status(200).json({ message: "Transaction successful",transaction, success: true });
+        return res.status(200).json({ message: "Transaction successful", transaction, success: true });
     } catch (error) {
         dbgr(error);
     }
@@ -101,9 +101,9 @@ export const getUserTransactions = async (req, res) => {
         const transactions = await transactiondb.find({
             $or: [{ sender: req.id }, { receiver: req.id }]
         })
-        .populate('sender', 'fullname') // Populating sender with selected fields
-        .populate('receiver', 'fullname') // Populating receiver with selected fields
-        .sort({ createdAt: -1 });
+            .populate('sender', 'fullname') // Populating sender with selected fields
+            .populate('receiver', 'fullname') // Populating receiver with selected fields
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             message: "Transactions fetched successfully",

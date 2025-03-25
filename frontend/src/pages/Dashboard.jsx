@@ -166,37 +166,38 @@ const ActionButton = ({ icon, label }) => (
 );
 
 const TransactionItem = ({ senderName, receiverName, amount, type, date }) => {
-  const {user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   return (
-  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5">
-    <div className="flex items-center gap-4">
-      <div
-        className={`p-2 rounded-full ${
-          type === "sent" ? "bg-red-500/20" : "bg-green-500/20"
+    <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5">
+      <div className="flex items-center gap-4">
+        <div
+          className={`p-2 rounded-full ${
+            type === "sent" ? "bg-red-500/20" : "bg-green-500/20"
+          }`}
+        >
+          {type === "sent" ? (
+            <GoArrowUpRight className="h-5 w-5 text-red-400" />
+          ) : (
+            <GoArrowDownLeft className="h-5 w-5 text-green-400" />
+          )}
+        </div>
+        <div>
+          <p className="font-medium text-white">
+            {senderName === user?.fullname ? receiverName : senderName}
+          </p>
+
+          <p className="text-sm text-gray-300">{date}</p>
+        </div>
+      </div>
+      <p
+        className={`font-medium ${
+          type === "sent" ? "text-red-300" : "text-green-300"
         }`}
       >
-        {type === "sent" ? (
-          <GoArrowUpRight className="h-5 w-5 text-red-400" />
-        ) : (
-          <GoArrowDownLeft className="h-5 w-5 text-green-400" />
-        )}
-      </div>
-      <div>
-        <p className="font-medium text-white">
-          {senderName === user?.fullname ? receiverName : senderName}
-        </p>
-
-        <p className="text-sm text-gray-300">{date}</p>
-      </div>
+        {`${type === "sent" ? "-" : "+"}`} {amount}
+      </p>
     </div>
-    <p
-      className={`font-medium ${
-        type === "sent" ? "text-red-300" : "text-green-300"
-      }`}
-    >
-      {`${type === "sent" ? "-" : "+"}`} {amount}
-    </p>
-  </div>
-)};
+  );
+};
 
 export default Dashboard;

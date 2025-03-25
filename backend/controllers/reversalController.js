@@ -143,6 +143,6 @@ export const declineReversal = async (req, res) => {
         });
 
     } catch (error) {
-       dbgr(error.message);
+        dbgr(error.message);
     }
 };

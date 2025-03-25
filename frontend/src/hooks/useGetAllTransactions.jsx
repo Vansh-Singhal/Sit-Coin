@@ -24,7 +24,11 @@ const useGetAllTransactions = () => {
           dispatch(fetchTransactionsSuccess(res.data.transactions));
         }
       } catch (error) {
-        dispatch(fetchTransactionsFailure(error.response?.data?.message || "Fetching trasactions failed"));
+        dispatch(
+          fetchTransactionsFailure(
+            error.response?.data?.message || "Fetching trasactions failed"
+          )
+        );
       }
     };
 

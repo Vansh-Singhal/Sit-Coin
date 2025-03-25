@@ -10,7 +10,7 @@ import {
   BiSolidBank,
   BiMobile,
   BiQr,
-  BiHistory
+  BiHistory,
 } from "react-icons/bi";
 import { FiSend, FiClock, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
 import { Scanner } from "@yudiel/react-qr-scanner";
@@ -48,9 +48,13 @@ const TransferMain = () => {
     }
 
     try {
-      const res = await axios.post(`${TRANSACTION_API_ENDPOINT}/create`, formData, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${TRANSACTION_API_ENDPOINT}/create`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log(res.data);
       toast.success("Transaction completed");
@@ -58,9 +62,7 @@ const TransferMain = () => {
       console.warn(error);
       toast.error("Transacion failed");
     }
-
-
-  }
+  };
 
   const recentRecipients = [
     { id: 1, name: "John Doe", upiId: "johndoe@okbank", image: null },
@@ -285,7 +287,10 @@ const TransferMain = () => {
             </div>
 
             {/* Transfer Button */}
-            <Button className="w-full py-6 text-lg bg-white/10 hover:bg-white/20 text-white gap-2" onClick = {handleSubmit}>
+            <Button
+              className="w-full py-6 text-lg bg-white/10 hover:bg-white/20 text-white gap-2"
+              onClick={handleSubmit}
+            >
               <FiSend className="h-5 w-5" />
               Transfer Money
             </Button>
@@ -330,7 +335,9 @@ const TransferMain = () => {
 
             {/* Transfer Info */}
             <div className="rounded-xl backdrop-blur-md bg-white/10 border border-white/20 p-6 space-y-4">
-              <h2 className="text-lg font-semibold text-white">Transfer Info</h2>
+              <h2 className="text-lg font-semibold text-white">
+                Transfer Info
+              </h2>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <FiClock className="h-5 w-5 text-blue-400 mt-0.5" />
