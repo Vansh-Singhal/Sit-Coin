@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { USER_API_ENDPOINT } from "@/utils/constant";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   return (

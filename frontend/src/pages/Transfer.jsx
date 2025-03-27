@@ -17,6 +17,9 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import { TRANSACTION_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addTransaction } from "@/redux/transactionSlice";
+import { updateBalance } from "@/redux/authSlice";
 
 const Transfer = () => {
   return (
@@ -29,18 +32,20 @@ const Transfer = () => {
 };
 
 const TransferMain = () => {
-  const [transferMethod, setTransferMethod] = useState("upi");
+  const dispatch = useDispatch();
+  const {user} = useSelector((state)=>state.auth);
+  const [transferMethod, setTransferMethod] = useState("contact");
   const [scanResult, setScanResult] = useState(null);
   const [formData, setFormData] = useState({
     contact: "",
     amount: 0,
     account_number: "",
-    mode: "upi",
+    mode: "contact",
     note: "",
   });
 
   const handleSubmit = async () => {
-    if (formData.mode === "upi") formData.account_number = "";
+    if (formData.mode === "contact") formData.account_number = "";
     else if (formData.mode === "bank") formData.contact = "";
     else {
       formData.account_number = scanResult[0].rawValue;
@@ -57,6 +62,7 @@ const TransferMain = () => {
       );
 
       console.log(res.data);
+      dispatch(addTransaction(res.data.transaction));
       toast.success("Transaction completed");
     } catch (error) {
       console.warn(error);
@@ -65,10 +71,10 @@ const TransferMain = () => {
   };
 
   const recentRecipients = [
-    { id: 1, name: "John Doe", upiId: "johndoe@okbank", image: null },
-    { id: 2, name: "Sarah Smith", upiId: "sarah@okbank", image: null },
-    { id: 3, name: "Alex Johnson", upiId: "alex@okbank", image: null },
-    { id: 4, name: "Priya Sharma", upiId: "priya@okbank", image: null },
+    { id: 1, name: "John Doe", contactId: "johndoe@okbank", image: null },
+    { id: 2, name: "Sarah Smith", contactId: "sarah@okbank", image: null },
+    { id: 3, name: "Alex Johnson", contactId: "alex@okbank", image: null },
+    { id: 4, name: "Priya Sharma", contactId: "priya@okbank", image: null },
   ];
 
   const quickAmounts = [500, 1000, 2000, 5000, 10000, 50000];
@@ -113,11 +119,11 @@ const TransferMain = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Button
                   className={`p-3 h-auto flex flex-col items-center gap-2 ${
-                    transferMethod === "upi"
+                    transferMethod === "contact"
                       ? "bg-white/20"
                       : "bg-white/10 hover:bg-white/15"
                   }`}
-                  onClick={() => handlePaymentMethodChange("upi")}
+                  onClick={() => handlePaymentMethodChange("contact")}
                 >
                   <BiMobile className="h-6 w-6" />
                   <span className="text-sm">UPI</span>
@@ -154,7 +160,7 @@ const TransferMain = () => {
                 Transfer Details
               </h2>
 
-              {transferMethod === "upi" && (
+              {transferMethod === "contact" && (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <label
@@ -324,7 +330,7 @@ const TransferMain = () => {
                           {recipient.name}
                         </p>
                         <p className="text-xs text-gray-400">
-                          {recipient.upiId}
+                          {recipient.contactId}
                         </p>
                       </div>
                     </div>

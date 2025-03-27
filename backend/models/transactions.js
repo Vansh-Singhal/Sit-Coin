@@ -23,7 +23,7 @@ const transactionSchema = mongoose.Schema({
         type: String,
         enum: ["qr", "contact", "bank"],
         required: true,
-    }
+    },
 }, { timestamps: true });
 
 export const transactiondb = mongoose.model('Transactions', transactionSchema);

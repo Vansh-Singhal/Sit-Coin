@@ -1,4 +1,5 @@
 import {
+  clearTransactions,
   fetchTransactionsFailure,
   fetchTransactionsStart,
   fetchTransactionsSuccess,
@@ -31,7 +32,7 @@ const useGetAllTransactions = () => {
         );
       }
     };
-
+    dispatch(clearTransactions());
     fetchAllTransactions();
   }, []);
 };

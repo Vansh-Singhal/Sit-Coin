@@ -6,21 +6,20 @@ import {
   BiSearch,
   BiFilterAlt,
   BiRefresh,
-  BiTime,
   BiCheck,
-  BiX,
+  BiQr,
+  BiMobile,
+  BiSolidBank,
+  BiTime,
+  BiX
 } from "react-icons/bi";
-import {
-  FiShoppingBag,
-  FiCoffee,
-  FiHome,
-  FiSmartphone,
-  FiCreditCard,
-  FiAlertCircle,
-  FiClock,
-} from "react-icons/fi";
-import React from "react";
-import { useSelector } from "react-redux";
+import { FiAlertCircle } from "react-icons/fi";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { REVERSAL_API_ENDPOINT } from "@/utils/constant";
+import axios from "axios";
+import { addReversal } from "@/redux/reversalSlice";
+import { toast } from "react-toastify";
 
 const Reversals = () => {
   return (
@@ -32,108 +31,60 @@ const Reversals = () => {
   );
 };
 
+const isWithinLast7Days = (date) => {
+  const currentDate = new Date();
+  const sevenDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 7)); // 7 days ago
+  return new Date(date) >= sevenDaysAgo;
+};
+
 const ReversalsMain = () => {
-  let { transactions } = useSelector((state)=> state.transactions);
-  transactions = transactions.filter((item)=>item.status !== "failed");
+  const dispatch = useDispatch();
+  let { user } = useSelector((state) => state.auth);
+  let { transactions } = useSelector((state) => state.transactions);
+  let { reversals } = useSelector((state) => state.reversals);
 
-  const reversalRequests = [
-    {
-      id: 1,
-      name: "Amazon Shopping",
-      amount: "₹1,200",
-      date: "Today, 11:20 AM",
-      category: "Shopping",
-      status: "Eligible",
-      icon: <FiShoppingBag />,
-      transactionId: "TXN123456789",
-      requestStatus: null,
-    },
-    {
-      id: 2,
-      name: "Electric Bill",
-      amount: "₹2,000",
-      date: "Yesterday, 6:45 PM",
-      category: "Utilities",
-      status: "Eligible",
-      icon: <FiHome />,
-      transactionId: "TXN987654321",
-      requestStatus: null,
-    },
-    {
-      id: 3,
-      name: "Starbucks Coffee",
-      amount: "₹350",
-      date: "24 Feb, 9:30 AM",
-      category: "Food & Drinks",
-      status: "Processing",
-      icon: <FiCoffee />,
-      transactionId: "TXN456789123",
-      requestStatus: "processing",
-    },
-    {
-      id: 4,
-      name: "Mobile Recharge",
-      amount: "₹799",
-      date: "23 Feb, 5:20 PM",
-      category: "Utilities",
-      status: "Approved",
-      icon: <FiSmartphone />,
-      transactionId: "TXN789123456",
-      requestStatus: "approved",
-    },
-    {
-      id: 5,
-      name: "Credit Card Payment",
-      amount: "₹5,000",
-      date: "22 Feb, 4:45 PM",
-      category: "Bills",
-      status: "Rejected",
-      icon: <FiCreditCard />,
-      transactionId: "TXN321654987",
-      requestStatus: "rejected",
-      rejectionReason: "Past the eligible time window",
-    },
-  ];
+  const EnhancedTransactions = [];
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "processing":
-        return <FiClock className="h-5 w-5 text-yellow-400" />;
-      case "approved":
-        return <BiCheck className="h-5 w-5 text-green-400" />;
-      case "rejected":
-        return <BiX className="h-5 w-5 text-red-400" />;
-      default:
-        return null;
+  for (const transaction of transactions) {
+    // Check if the transaction is not failed, is from the current user, and is within the last 7 days
+    if (
+      transaction.status !== "failed" &&
+      transaction.sender._id === user?._id &&
+      isWithinLast7Days(transaction.createdAt)
+    ) {
+      // Check if a reversal exists for this transaction
+      const reversal = reversals.find(
+        (reversal) => reversal.transactionID === transaction._id
+      );
+  
+      // Add the enhanced transaction to the filtered array
+      EnhancedTransactions.push({
+        ...transaction,
+        reversalStatus: reversal ? reversal.status : null,
+      });
     }
-  };
+  }
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "processing":
-        return (
-          <span className="px-2 py-1 rounded-full text-xs bg-yellow-500/20 text-yellow-400">
-            Processing
-          </span>
-        );
-      case "approved":
-        return (
-          <span className="px-2 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
-            Approved
-          </span>
-        );
-      case "rejected":
-        return (
-          <span className="px-2 py-1 rounded-full text-xs bg-red-500/20 text-red-400">
-            Rejected
-          </span>
-        );
-      default:
-        return (
-          <span className="px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
-            Eligible
-          </span>
-        );
+  const handleReversalRequest = async (x) => {
+    const formData = {
+      transactionID: x,
+      reason: "Incorrect Contact Entered",
+    };
+
+    try {
+      const res = await axios.post(
+        `${REVERSAL_API_ENDPOINT}/create`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      dispatch(addReversal(res.data.reversal));
+      toast.success("Reversal Requested Successfully");
+    } catch (error) {
+      console.warn(error);
+      toast.error("Request failed");
     }
   };
 
@@ -177,71 +128,95 @@ const ReversalsMain = () => {
         </div>
 
         {/* Reversals List */}
-        <div className="rounded-xl backdrop-blur-md bg-white/10 border border-white/20">
+        <div className="rounded-xl backdrop-blur-lg bg-white/10 border border-white/20">
           {/* Table Header */}
-          <div className="grid grid-cols-[1fr_auto_auto] md:grid-cols-[1fr_auto_auto_auto_auto] gap-4 p-4 border-b border-white/10 text-sm text-gray-300">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 border-b border-white/10 text-sm text-gray-300">
             <div>Transaction Details</div>
-            <div className="hidden md:block">Transaction ID</div>
-            <div className="hidden md:block">Date</div>
-            <div>Status</div>
+            <div className="hidden lg:block">Transaction ID</div>
+            <div className="hidden sm:block">Date</div>
+            <div className="hidden lg:block">Status</div>
             <div>Action</div>
           </div>
 
           {/* Table Body */}
           <div className="divide-y divide-white/10">
-            {transactions.map((request) => (
+            {EnhancedTransactions.map((request) => (
               <div
                 key={request._id}
-                className="grid grid-cols-[1fr_auto_auto] md:grid-cols-[1fr_auto_auto_auto_auto] gap-4 p-4 items-center hover:bg-white/5"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 items-center hover:bg-white/5"
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-white/10">
-                    {request.mode}
+                {/* Transaction Details */}
+                <div className="flex items-center gap-3 col-span-1">
+                  <div className="p-2 rounded-full bg-white/10 text-blue-300">
+                    {request.mode === "qr" ? (
+                      <BiQr />
+                    ) : request.mode === "contact" ? (
+                      <BiMobile />
+                    ) : (
+                      <BiSolidBank />
+                    )}
                   </div>
                   <div>
-                    <p className="font-medium text-white">{request.sender.fullname}</p>
-                    <p className="text-sm text-red-400">-{request.amount}</p>
+                    <p className="font-medium text-white">
+                      {request.receiver.fullname}
+                    </p>
+                    {
+                      <p className="text-sm text-red-400">
+                        - ₹{request.amount}
+                      </p>
+                    }
                   </div>
                 </div>
 
-                <div className="hidden md:block text-gray-300 text-sm">
+                {/* Transaction ID (hidden on small screens) */}
+                <div className="text-gray-300 text-sm hidden lg:block">
                   {request._id}
                 </div>
 
-                <div className="hidden md:block text-gray-300 text-sm">
-                {new Date(request.createdAt).toLocaleString()}
+                {/* Date */}
+                <div className="text-gray-300 text-sm hidden sm:block">
+                  {new Date(request.createdAt).toLocaleString()}
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {getStatusIcon(request.requestStatus)}
-                  {getStatusBadge(request.requestStatus)}
+                {/* Status (hidden on small screens) */}
+                <div className="hidden lg:block">
+                  {request.status === "reversed" ? (
+                    <span className="px-2 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+                      Reversed
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
+                      Eligible
+                    </span>
+                  )}
                 </div>
 
+                {/* Action */}
                 <div>
-                  {!request.requestStatus ? (
-                    <Button className="bg-white/10 hover:bg-white/20 text-white text-sm">
+                {!request.reversalStatus ? (
+                    <Button className="bg-white hover:bg-white/70 text-black text-sm" onClick={() => handleReversalRequest(request._id)}>
                       Request Reversal
                     </Button>
-                  ) : request.requestStatus === "processing" ? (
+                  ) : request.reversalStatus === "pending" ? (
                     <Button
                       variant="outline"
-                      className="border-yellow-500/30 text-yellow-400 text-sm hover:bg-yellow-500/10"
+                      className="border-yellow-500/30 text-yellow-400 text-sm hover:bg-white/70"
                     >
-                      <BiTime className="mr-1 h-4 w-4" /> View Status
+                      <BiTime className="mr-1 h-4 w-4" /> Request Pending
                     </Button>
-                  ) : request.requestStatus === "approved" ? (
+                  ) : request.reversalStatus === "accepted" ? (
                     <Button
                       variant="outline"
-                      className="border-green-500/30 text-green-400 text-sm hover:bg-green-500/10"
+                      className="border-green-500/30 text-green-400 text-sm hover:bg-white/70"
                     >
-                      <BiCheck className="mr-1 h-4 w-4" /> Completed
+                      <BiCheck className="mr-1 h-4 w-4" /> Request Accepted
                     </Button>
                   ) : (
                     <Button
                       variant="outline"
-                      className="border-red-500/30 text-red-400 text-sm hover:bg-red-500/10"
+                      className="border-red-500/30 text-red-400 text-sm hover:bg-white/70"
                     >
-                      <FiAlertCircle className="mr-1 h-4 w-4" /> View Details
+                      <BiX className="mr-1 h-4 w-4" /> Request Rejected
                     </Button>
                   )}
                 </div>
@@ -266,19 +241,6 @@ const ReversalsMain = () => {
             </p>
             <p>• Rejected reversal requests cannot be resubmitted</p>
             <p>• For any assistance, please contact our customer support</p>
-          </div>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-between items-center text-gray-300 text-sm">
-          <p>Showing 5 of 12 transactions</p>
-          <div className="flex gap-2">
-            <Button variant="ghost" className="text-white hover:bg-white/10">
-              Previous
-            </Button>
-            <Button variant="ghost" className="text-white hover:bg-white/10">
-              Next
-            </Button>
           </div>
         </div>
       </div>

@@ -9,10 +9,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import useGetAllTransactions from "@/hooks/useGetAllTransactions";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
+import useGetAllReversals from "@/hooks/useGetAllReversals";
 
 const Dashboard = () => {
   useGetAllTransactions();
-  useGetUserBalance();
+  useGetAllReversals();
   return (
     <>
       <Header />

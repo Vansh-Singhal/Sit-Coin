@@ -34,8 +34,6 @@ export const transferMoney = async (req, res) => {
             return res.status(404).json({ message: "Sender not found", success: false });
         }
 
-
-
         // Check sufficient balance
         if (sender.balance < amount) {
             const transaction = await transactiondb.create({
