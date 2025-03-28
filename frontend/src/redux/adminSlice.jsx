@@ -4,6 +4,9 @@ const adminSlice = createSlice({
   name: "admin",
   initialState: {
     admin: null,
+    users : [],
+    reversals : [],
+    transactions : [],
     loading: false,
     error: null,
   },
@@ -26,8 +29,31 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+
+    //FETCH REDUCERS
+    fetchStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchReversalsSuccess: (state, action) => {
+      state.reversals = action.payload;
+      state.loading = false;
+    },
+    fetchTransactionsSuccess: (state, action) => {
+      state.transactions = action.payload;
+      state.loading = false;
+    },
+    fetchUsersSuccess: (state, action) => {
+      state.users = action.payload;
+      state.loading = false;
+    },
+    fetchFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, adminLogout } = adminSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, adminLogout, fetchStart, fetchReversalsSuccess, fetchTransactionsSuccess, fetchUsersSuccess, fetchFailure } = adminSlice.actions;
 export default adminSlice.reducer;

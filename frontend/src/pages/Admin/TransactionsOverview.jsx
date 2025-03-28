@@ -1,62 +1,11 @@
+import useGetAllUsersTransactions from "@/hooks/useGetAllUsersTransactions";
 import React, { useState } from "react";
 import { FiSearch, FiDownload, FiCalendar } from "react-icons/fi";
-
-// Mock data for transactions
-const mockTransactions = [
-  {
-    id: "TXN001",
-    amount: 1500,
-    sender: "John Doe",
-    senderAccount: "SITC0001234",
-    receiver: "Jane Smith",
-    receiverAccount: "SITC0001235",
-    status: "success",
-    date: "2023-05-15",
-  },
-  {
-    id: "TXN002",
-    amount: 2000,
-    sender: "Mike Johnson",
-    senderAccount: "SITC0001236",
-    receiver: "Sarah Williams",
-    receiverAccount: "SITC0001237",
-    status: "success",
-    date: "2023-05-16",
-  },
-  {
-    id: "TXN003",
-    amount: 500,
-    sender: "David Brown",
-    senderAccount: "SITC0001238",
-    receiver: "John Doe",
-    receiverAccount: "SITC0001234",
-    status: "failed",
-    date: "2023-05-16",
-  },
-  {
-    id: "TXN004",
-    amount: 3000,
-    sender: "Jane Smith",
-    senderAccount: "SITC0001235",
-    receiver: "Mike Johnson",
-    receiverAccount: "SITC0001236",
-    status: "reversed",
-    date: "2023-05-17",
-  },
-  {
-    id: "TXN005",
-    amount: 1000,
-    sender: "Sarah Williams",
-    senderAccount: "SITC0001237",
-    receiver: "David Brown",
-    receiverAccount: "SITC0001238",
-    status: "success",
-    date: "2023-05-17",
-  },
-];
+import { useSelector } from "react-redux";
 
 const TransactionsOverview = () => {
-  const [transactions] = useState(mockTransactions);
+  
+  const { transactions } = useSelector((state)=>state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
@@ -80,9 +29,9 @@ const TransactionsOverview = () => {
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch =
-      transaction.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.receiver.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.id.toLowerCase().includes(searchTerm.toLowerCase());
+      transaction.sender.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.receiver.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction._id.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" || transaction.status === statusFilter;
@@ -169,27 +118,27 @@ const TransactionsOverview = () => {
           <tbody>
             {filteredTransactions.map((transaction) => (
               <tr
-                key={transaction.id}
+                key={transaction._id}
                 className="border-b border-blue-300 border-opacity-10 hover:bg-gradient-to-r from-[#000428] to-[#004e92] hover:text-white"
               >
-                <td className="px-4 py-3 text-white">{transaction.id}</td>
+                <td className="px-4 py-3 text-white">{transaction._id}</td>
                 <td className="px-4 py-3 text-white">
                   ₹{transaction.amount.toFixed(2)}
                 </td>
                 <td className="px-4 py-3 text-white">
-                  <div>{transaction.sender}</div>
+                  <div>{transaction.sender.fullname}</div>
                   <div className="text-blue-200 text-xs">
-                    {transaction.senderAccount}
+                    {/* {transaction.senderAccount} */}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-white">
-                  <div>{transaction.receiver}</div>
+                  <div>{transaction.receiver.fullname}</div>
                   <div className="text-blue-200 text-xs">
                     {transaction.receiverAccount}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-white hidden md:table-cell">
-                  {transaction.date}
+                  {Date(transaction.createdAt)}
                 </td>
                 <td className="px-4 py-3">
                   <span

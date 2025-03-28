@@ -1,53 +1,11 @@
 import React, { useState } from "react";
 import { FiSearch, FiCheck, FiX, FiBell } from "react-icons/fi";
+import { FaQuestion } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { FaExclamation } from "react-icons/fa6";
 
-// Mock data for reversal requests
-const mockReversalRequests = [
-  {
-    id: "REV001",
-    user: "John Doe",
-    userAccount: "SITC0001234",
-    transactionId: "TXN001",
-    amount: 1500,
-    reason: "Wrong recipient",
-    status: "pending",
-    date: "2023-05-16",
-  },
-  {
-    id: "REV002",
-    user: "Jane Smith",
-    userAccount: "SITC0001235",
-    transactionId: "TXN004",
-    amount: 3000,
-    reason: "Fraudulent transaction",
-    status: "approved",
-    date: "2023-05-17",
-  },
-  {
-    id: "REV003",
-    user: "Mike Johnson",
-    userAccount: "SITC0001236",
-    transactionId: "TXN002",
-    amount: 2000,
-    reason: "Service not received",
-    status: "denied",
-    date: "2023-05-17",
-  },
-  {
-    id: "REV004",
-    user: "Sarah Williams",
-    userAccount: "SITC0001237",
-    transactionId: "TXN005",
-    amount: 1000,
-    reason: "Duplicate payment",
-    status: "pending",
-    date: "2023-05-18",
-  },
-];
-
-const ReversalRequests = () => {
-  const [reversalRequests, setReversalRequests] =
-    useState(mockReversalRequests);
+const reversals = () => {
+  const { reversals } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -61,9 +19,9 @@ const ReversalRequests = () => {
 
   const approveRequest = (requestId) => {
     // In a real app, this would make an API call
-    setReversalRequests(
-      reversalRequests.map((request) => {
-        if (request.id === requestId) {
+    setreversals(
+      reversals.map((request) => {
+        if (request._id === requestId) {
           return {
             ...request,
             status: "approved",
@@ -72,42 +30,27 @@ const ReversalRequests = () => {
         return request;
       })
     );
-
-    // Simulate sending notification
-    alert(
-      `Notification sent to user: Your reversal request ${requestId} has been approved.`
-    );
   };
 
   const denyRequest = (requestId) => {
     // In a real app, this would make an API call
-    setReversalRequests(
-      reversalRequests.map((request) => {
-        if (request.id === requestId) {
+    setreversals(
+      reversals.map((request) => {
+        if (request._id === requestId) {
           return {
             ...request,
-            status: "denied",
+            status: "rejected",
           };
         }
         return request;
       })
     );
-
-    // Simulate sending notification
-    alert(
-      `Notification sent to user: Your reversal request ${requestId} has been denied.`
-    );
   };
 
-  const sendNotification = (requestId) => {
-    // In a real app, this would make an API call to send a notification
-    alert(`Additional notification sent for request ${requestId}`);
-  };
-
-  const filteredRequests = reversalRequests.filter((request) => {
+  const filteredRequests = reversals.filter((request) => {
     const matchesSearch =
-      request.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request.user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       request.transactionId.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
@@ -148,7 +91,7 @@ const ReversalRequests = () => {
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>
-            <option value="denied">Denied</option>
+            <option value="rejected">Rejected</option>
           </select>
         </div>
       </div>
@@ -175,21 +118,21 @@ const ReversalRequests = () => {
           <tbody>
             {filteredRequests.map((request) => (
               <tr
-                key={request.id}
+                key={request._id}
                 className="border-b border-blue-300 border-opacity-10 hover:bg-gradient-to-r from-[#000428] to-[#004e92] hover:text-white"
               >
-                <td className="px-4 py-3 text-white">{request.id}</td>
+                <td className="px-4 py-3 text-white">{request._id}</td>
                 <td className="px-4 py-3 text-white">
-                  <div>{request.user}</div>
+                  <div>{request.user.fullname}</div>
                   <div className="text-blue-200 text-xs">
                     {request.userAccount}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-white hidden md:table-cell">
-                  {request.transactionId}
+                  {request.transactionID._id}
                 </td>
                 <td className="px-4 py-3 text-white">
-                  ₹{request.amount.toFixed(2)}
+                  ₹{request.transactionID.amount}
                 </td>
                 <td className="px-4 py-3 text-white hidden md:table-cell">
                   {request.reason}
@@ -212,14 +155,12 @@ const ReversalRequests = () => {
                     {request.status === "pending" && (
                       <>
                         <button
-                          onClick={() => approveRequest(request.id)}
                           title="Approve Request"
                           className="p-1.5 bg-green-500 bg-opacity-20 text-green-300 rounded-lg hover:bg-opacity-30"
                         >
                           <FiCheck size={16} />
                         </button>
                         <button
-                          onClick={() => denyRequest(request.id)}
                           title="Deny Request"
                           className="p-1.5 bg-red-500 bg-opacity-20 text-red-300 rounded-lg hover:bg-opacity-30"
                         >
@@ -228,11 +169,10 @@ const ReversalRequests = () => {
                       </>
                     )}
                     <button
-                      onClick={() => sendNotification(request.id)}
-                      title="Send Notification"
-                      className="p-1.5 bg-blue-500 bg-opacity-20 text-blue-300 rounded-lg hover:bg-opacity-30"
+                      title="Info"
+                      className="p-1.5 bg-gray-500 bg-opacity-20 text-white rounded-lg hover:bg-opacity-30"
                     >
-                      <FiBell size={16} />
+                      <FaExclamation size={16} />
                     </button>
                   </div>
                 </td>
@@ -245,4 +185,4 @@ const ReversalRequests = () => {
   );
 };
 
-export default ReversalRequests;
+export default reversals;

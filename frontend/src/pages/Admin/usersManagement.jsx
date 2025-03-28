@@ -1,52 +1,11 @@
+import useGetAllUsers from "@/hooks/useGetAllUsers";
 import React, { useState } from "react";
 import { FiSearch, FiUserX, FiUserCheck } from "react-icons/fi";
-
-// Mock data for users
-const mockUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    contact: "+91 9876543210",
-    accountNumber: "SITC0001234",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    contact: "+91 9876543211",
-    accountNumber: "SITC0001235",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    contact: "+91 9876543212",
-    accountNumber: "SITC0001236",
-    status: "blocked",
-  },
-  {
-    id: 4,
-    name: "Sarah Williams",
-    email: "sarah@example.com",
-    contact: "+91 9876543213",
-    accountNumber: "SITC0001237",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "David Brown",
-    email: "david@example.com",
-    contact: "+91 9876543214",
-    accountNumber: "SITC0001238",
-    status: "active",
-  },
-];
+import { useSelector } from "react-redux";
 
 const UsersManagement = () => {
-  const [users, setUsers] = useState(mockUsers);
+  
+  const { users } = useSelector((state)=>state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -75,9 +34,9 @@ const UsersManagement = () => {
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.accountNumber.toLowerCase().includes(searchTerm.toLowerCase());
+      user.account_number.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" || user.status === statusFilter;
@@ -136,16 +95,16 @@ const UsersManagement = () => {
           <tbody>
             {filteredUsers.map((user) => (
               <tr
-                key={user.id}
+                key={user._id}
                 className="border-b border-blue-300 border-opacity-10 hover:bg-gradient-to-r from-[#000428] to-[#004e92] hover:text-white"
               >
-                <td className="px-4 py-3 text-white">{user.name}</td>
+                <td className="px-4 py-3 text-white">{user.fullname}</td>
                 <td className="px-4 py-3 text-white">{user.email}</td>
                 <td className="px-4 py-3 text-white hidden md:table-cell">
                   {user.contact}
                 </td>
                 <td className="px-4 py-3 text-white hidden md:table-cell">
-                  {user.accountNumber}
+                  {user.account_number}
                 </td>
                 <td className="px-4 py-3">
                   <span

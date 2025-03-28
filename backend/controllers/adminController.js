@@ -9,9 +9,9 @@ import debug from 'debug';
 
 const dbgr = debug("development:adminController")
 
-export const createAdmin = async (req,res) => {
+export const createAdmin = async (req, res) => {
     try {
-        const {fullname, email, password, role} = req.body;
+        const { fullname, email, password, role } = req.body;
         if (!email || !fullname || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
@@ -75,25 +75,25 @@ export const loginAdmin = async (req, res) => {
 
 export const getAllReversals = async (req, res) => {
     try {
-        const reversals = await reversaldb.find({ }).sort({ createdAt: -1 });
+        const reversals = await reversaldb.find({}).populate('user').populate('transactionID').sort({ createdAt: -1 });
         res.status(200).json({ message: "Reversals fetched successfully", reversals, success: true });
     } catch (error) {
         dbgr(error.message);
     }
 };
 
-export const getAllUsers = async (req,res) => {
+export const getAllUsers = async (req, res) => {
     try {
-        const users = await userdb.find({ }).sort({ createdAt: -1 });
+        const users = await userdb.find({}).sort({ createdAt: -1 });
         res.status(200).json({ message: "Users fetched successfully", users, success: true });
     } catch (error) {
         dbgr(error.message);
     }
 }
 
-export const getAllTransactions = async (req,res) => {
+export const getAllTransactions = async (req, res) => {
     try {
-        const transactions = await transactiondb.find({ }).sort({ createdAt: -1 });
+        const transactions = await transactiondb.find({}).populate('sender').populate('receiver').sort({ createdAt: -1 });
         res.status(200).json({ message: "Users fetched successfully", transactions, success: true });
     } catch (error) {
         dbgr(error.message);

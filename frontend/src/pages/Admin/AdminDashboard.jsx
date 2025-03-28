@@ -11,8 +11,16 @@ import UsersManagement from "./usersManagement.jsx";
 import TransactionsOverview from "./TransactionsOverview.jsx";
 import ReversalRequests from "./ReversalRequests.jsx";
 import AdminSettings from "./AdminSettings.jsx";
+import useGetAllUsers from "@/hooks/useGetAllUsers.jsx";
+import useGetAllUsersTransactions from "@/hooks/useGetAllUsersTransactions.jsx";
+import useGetAllUsersReversals from "@/hooks/useGetAllUsersReversal.jsx";
 
 const AdminDashboard = () => {
+  useGetAllUsers();
+  useGetAllUsersTransactions();
+  useGetAllUsersReversals();
+
+
   return (
     <div>
       <AdminDashboardMain />
