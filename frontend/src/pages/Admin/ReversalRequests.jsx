@@ -4,7 +4,7 @@ import { FaQuestion } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { FaExclamation } from "react-icons/fa6";
 import { REVERSAL_API_ENDPOINT } from "@/utils/constant";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { updateReversal } from "@/redux/adminSlice";
 
@@ -108,7 +108,7 @@ const reversals = () => {
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
+            <option value="accepted">Accepted</option>
             <option value="rejected">Rejected</option>
           </select>
         </div>

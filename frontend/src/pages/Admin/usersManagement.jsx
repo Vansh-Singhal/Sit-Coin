@@ -4,8 +4,7 @@ import { FiSearch, FiUserX, FiUserCheck } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 const UsersManagement = () => {
-  
-  const { users } = useSelector((state)=>state.admin);
+  const { users } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 

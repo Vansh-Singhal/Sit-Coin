@@ -20,7 +20,6 @@ const AdminDashboard = () => {
   useGetAllUsersTransactions();
   useGetAllUsersReversals();
 
-
   return (
     <div>
       <AdminDashboardMain />

@@ -4,8 +4,7 @@ import { FiSearch, FiDownload, FiCalendar } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 const TransactionsOverview = () => {
-  
-  const { transactions } = useSelector((state)=>state.admin);
+  const { transactions } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
@@ -29,8 +28,12 @@ const TransactionsOverview = () => {
 
   const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch =
-      transaction.sender.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.receiver.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.sender.fullname
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      transaction.receiver.fullname
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       transaction._id.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =

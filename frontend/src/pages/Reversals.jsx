@@ -3,6 +3,11 @@ import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   BiSearch,
   BiFilterAlt,
   BiRefresh,
@@ -11,7 +16,7 @@ import {
   BiMobile,
   BiSolidBank,
   BiTime,
-  BiX
+  BiX,
 } from "react-icons/bi";
 import { FiAlertCircle } from "react-icons/fi";
 import React, { useState } from "react";
@@ -32,43 +37,44 @@ const Reversals = () => {
 };
 
 const isWithinLast7Days = (date) => {
-  const currentDate = new Date();
-  const sevenDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 7)); // 7 days ago
+  const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
   return new Date(date) >= sevenDaysAgo;
 };
 
 const ReversalsMain = () => {
   const dispatch = useDispatch();
+  const [reason, setReason] = useState("");
+  const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
   let { user } = useSelector((state) => state.auth);
   let { transactions } = useSelector((state) => state.transactions);
   let { reversals } = useSelector((state) => state.reversals);
 
-  const EnhancedTransactions = [];
-
-  for (const transaction of transactions) {
-    // Check if the transaction is not failed, is from the current user, and is within the last 7 days
-    if (
-      transaction.status !== "failed" &&
-      transaction.sender._id === user?._id &&
-      isWithinLast7Days(transaction.createdAt)
-    ) {
-      // Check if a reversal exists for this transaction
+  const EnhancedTransactions = transactions
+    .filter(
+      (transaction) =>
+        transaction.status !== "failed" &&
+        transaction.sender._id === user?._id &&
+        isWithinLast7Days(transaction.createdAt)
+    )
+    .map((transaction) => {
       const reversal = reversals.find(
         (reversal) => reversal.transactionID === transaction._id
       );
-  
-      // Add the enhanced transaction to the filtered array
-      EnhancedTransactions.push({
+      return {
         ...transaction,
         reversalStatus: reversal ? reversal.status : null,
-      });
-    }
-  }
+      };
+    });
 
-  const handleReversalRequest = async (x) => {
+  const handleReversalRequest = async (transactionId) => {
+    if (!reason.trim()) {
+      toast.error("Please provide a reason for the reversal.");
+      return;
+    }
+
     const formData = {
-      transactionID: x,
-      reason: "Incorrect Contact Entered",
+      transactionID: transactionId,
+      reason,
     };
 
     try {
@@ -83,7 +89,7 @@ const ReversalsMain = () => {
       dispatch(addReversal(res.data.reversal));
       toast.success("Reversal Requested Successfully");
     } catch (error) {
-      console.warn(error);
+      console.error(error);
       toast.error("Request failed");
     }
   };
@@ -193,10 +199,43 @@ const ReversalsMain = () => {
 
                 {/* Action */}
                 <div>
-                {!request.reversalStatus ? (
-                    <Button className="bg-white hover:bg-white/70 text-black text-sm" onClick={() => handleReversalRequest(request._id)}>
-                      Request Reversal
-                    </Button>
+                  {!request.reversalStatus ? (
+                    <div>
+                      <Button
+                        className="bg-white hover:bg-white/70 text-black text-sm mt-4"
+                        onClick={() => setIsCollapsibleOpen(!isCollapsibleOpen)} // Open the collapsible when clicked
+                      >
+                        Request Reversal
+                      </Button>
+
+                      <Collapsible
+                        open={isCollapsibleOpen}
+                        onOpenChange={setIsCollapsibleOpen}
+                      >
+                        <CollapsibleContent>
+                          <div className="mt-4">
+                            <Input
+                              value={reason}
+                              onChange={(e) => setReason(e.target.value)}
+                              className="bg-white/5 text-white border-white/10"
+                              placeholder="Enter the reason for reversal"
+                            />
+                          </div>
+
+                          {/* Submit Button to Confirm Reversal Request */}
+                          <div className="mt-4">
+                            <Button
+                              className="bg-green-500 text-white text-sm"
+                              onClick={() =>
+                                handleReversalRequest(request._id)
+                              }
+                            >
+                              Submit Request
+                            </Button>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
                   ) : request.reversalStatus === "pending" ? (
                     <Button
                       variant="outline"
