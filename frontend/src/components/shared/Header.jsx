@@ -4,6 +4,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/authSlice";
 import { adminLogout } from "@/redux/adminSlice";
+import { clearReversals } from "@/redux/reversalSlice";
+import { clearTransactions } from "@/redux/transactionSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -11,7 +13,9 @@ const Header = () => {
   let logoutHandler = () => {
     dispatch(logout());
     dispatch(adminLogout());
-    navigate("/")
+    dispatch(clearReversals());
+    dispatch(clearTransactions());
+    navigate("/");
   }
 
   return (

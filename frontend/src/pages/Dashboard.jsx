@@ -14,6 +14,7 @@ import useGetAllReversals from "@/hooks/useGetAllReversals";
 const Dashboard = () => {
   useGetAllTransactions();
   useGetAllReversals();
+  useGetUserBalance();
   return (
     <>
       <Header />

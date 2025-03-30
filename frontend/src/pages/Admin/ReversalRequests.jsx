@@ -21,22 +21,7 @@ const reversals = () => {
   const handleStatusFilter = (e) => {
     setStatusFilter(e.target.value);
   };
-
-  const approveRequest = (requestId) => {
-    // In a real app, this would make an API call
-    setreversals(
-      reversals.map((request) => {
-        if (request._id === requestId) {
-          return {
-            ...request,
-            status: "approved",
-          };
-        }
-        return request;
-      })
-    );
-  };
-
+  
   let filteredRequests = reversals.filter((request) => {
     const matchesSearch =
       request.user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||

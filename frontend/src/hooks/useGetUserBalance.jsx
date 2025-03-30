@@ -2,10 +2,11 @@ import { updateBalance } from "@/redux/authSlice";
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import axios from "axios";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useGetUserBalance = () => {
   const dispatch = useDispatch();
+  const {user} = useSelector((state)=>state.auth);
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -14,6 +15,7 @@ const useGetUserBalance = () => {
         });
 
         if (res.data.success) {
+          console.log(res.data.balance);
           dispatch(updateBalance(res.data.balance));
         }
       } catch (error) {

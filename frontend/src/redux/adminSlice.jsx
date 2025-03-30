@@ -4,9 +4,9 @@ const adminSlice = createSlice({
   name: "admin",
   initialState: {
     admin: null,
-    users : [],
-    reversals : [],
-    transactions : [],
+    users: [],
+    reversals: [],
+    transactions: [],
     loading: false,
     error: null,
   },
@@ -28,6 +28,9 @@ const adminSlice = createSlice({
       state.admin = null;
       state.loading = false;
       state.error = null;
+      state.transactions = [];
+      state.users = [];
+      state.reversals = [];
     },
 
     //FETCH REDUCERS
@@ -53,11 +56,22 @@ const adminSlice = createSlice({
     },
 
     //UPDATE REVERSAL STATUS
-    updateReversal : (state,action) =>{
+    updateReversal: (state, action) => {
       state.reversals = action.payload;
     },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, adminLogout, fetchStart, fetchReversalsSuccess, fetchTransactionsSuccess, fetchUsersSuccess, fetchFailure, updateReversal } = adminSlice.actions;
+export const {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+  adminLogout,
+  fetchStart,
+  fetchReversalsSuccess,
+  fetchTransactionsSuccess,
+  fetchUsersSuccess,
+  fetchFailure,
+  updateReversal,
+} = adminSlice.actions;
 export default adminSlice.reducer;
