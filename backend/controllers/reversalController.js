@@ -87,6 +87,13 @@ export const approveReversal = async (req, res) => {
             });
         }
 
+        if (reversal.status === "accepted") {
+            return res.status(400).json({
+                message: "Reversal request already accepted",
+                success: false
+            });
+        }
+
         const { transactionID } = reversal;
 
         if (!transactionID || !transactionID.sender || !transactionID.receiver) {
@@ -131,6 +138,13 @@ export const declineReversal = async (req, res) => {
             message: "Reversal request not found",
             success: false
         });
+
+        if (reversal.status === "rejected") {
+            return res.status(400).json({
+                message: "Reversal request already accepted",
+                success: false
+            });
+        }
 
         reversal.status = "rejected";
         reversal.processedBy = processedBy;

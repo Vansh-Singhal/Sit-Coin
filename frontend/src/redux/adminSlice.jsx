@@ -51,9 +51,13 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    
+
+    //UPDATE REVERSAL STATUS
+    updateReversal : (state,action) =>{
+      state.reversals = action.payload;
+    },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, adminLogout, fetchStart, fetchReversalsSuccess, fetchTransactionsSuccess, fetchUsersSuccess, fetchFailure } = adminSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, adminLogout, fetchStart, fetchReversalsSuccess, fetchTransactionsSuccess, fetchUsersSuccess, fetchFailure, updateReversal } = adminSlice.actions;
 export default adminSlice.reducer;

@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { FiSearch, FiCheck, FiX, FiBell } from "react-icons/fi";
 import { FaQuestion } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaExclamation } from "react-icons/fa6";
+import { REVERSAL_API_ENDPOINT } from "@/utils/constant";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { updateReversal } from "@/redux/adminSlice";
 
 const reversals = () => {
   const { reversals } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const dispatch = useDispatch();
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -32,22 +37,7 @@ const reversals = () => {
     );
   };
 
-  const denyRequest = (requestId) => {
-    // In a real app, this would make an API call
-    setreversals(
-      reversals.map((request) => {
-        if (request._id === requestId) {
-          return {
-            ...request,
-            status: "rejected",
-          };
-        }
-        return request;
-      })
-    );
-  };
-
-  const filteredRequests = reversals.filter((request) => {
+  let filteredRequests = reversals.filter((request) => {
     const matchesSearch =
       request.user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       request._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,6 +48,34 @@ const reversals = () => {
 
     return matchesSearch && matchesStatus;
   });
+
+  const handleRequest = async (requestId, action) => {
+    const url = `${REVERSAL_API_ENDPOINT}/${action}/${requestId}`;
+    try {
+      const res = await axios.get(url, {
+        withCredentials: true,
+      });
+
+      if (res.data.success) {
+        filteredRequests = filteredRequests.map((request) =>
+          request._id === requestId
+            ? {
+                ...request,
+                status: action === "accept" ? "accepted" : "rejected",
+              }
+            : request
+        );
+        dispatch(updateReversal(filteredRequests));
+        toast.success("Updated Successfully");
+      } else {
+        toast.error(`Failed to ${action} request`);
+        console.error(`Failed to ${action} request`);
+      }
+    } catch (error) {
+      toast.error(`Failed to ${action} request`);
+      console.error(`Error ${action}ing request:`, error);
+    }
+  };
 
   return (
     <div className="bg-white/10 bg-opacity-10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
@@ -142,7 +160,7 @@ const reversals = () => {
                     className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                       request.status === "pending"
                         ? "bg-yellow-500 bg-opacity-20 text-yellow-300"
-                        : request.status === "approved"
+                        : request.status === "accepted"
                         ? "bg-green-500 bg-opacity-20 text-green-300"
                         : "bg-red-500 bg-opacity-20 text-red-300"
                     }`}
@@ -157,12 +175,14 @@ const reversals = () => {
                         <button
                           title="Approve Request"
                           className="p-1.5 bg-green-500 bg-opacity-20 text-green-300 rounded-lg hover:bg-opacity-30"
+                          onClick={() => handleRequest(request._id, "accept")}
                         >
                           <FiCheck size={16} />
                         </button>
                         <button
                           title="Deny Request"
                           className="p-1.5 bg-red-500 bg-opacity-20 text-red-300 rounded-lg hover:bg-opacity-30"
+                          onClick={() => handleRequest(request._id, "decline")}
                         >
                           <FiX size={16} />
                         </button>
