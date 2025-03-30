@@ -14,7 +14,6 @@ import AdminLogin from "./pages/Admin/AdminLogin.jsx";
 import ProtectedAdminRoute from "./components/protectedRoutes/ProtectedAdminRoute.jsx";
 import ProtectedUserRoute from "./components/protectedRoutes/ProtectedUserRoute";
 import Profile from "./pages/Profile";
-import Test from "./pages/test";
 
 const AppRouter = createBrowserRouter([
   {
