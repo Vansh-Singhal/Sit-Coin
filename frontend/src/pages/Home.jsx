@@ -52,9 +52,9 @@ const HomeMain = () => {
 
       <div className="flex flex-col md:flex-row justify-center items-center gap-8">
         <motion.img
-          src="/placeholder.svg?height=400&width=300"
+          src="\src\assets\Screenshot.png"
           alt="SITCOIN Screenshot"
-          className="rounded-lg shadow-lg"
+          className="rounded-lg shadow-lg h-72"
           variants={fadeInUp}
         />
         <motion.div className="text-left max-w-md" variants={fadeInUp}>
