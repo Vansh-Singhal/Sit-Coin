@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { FiSearch, FiCheck, FiX, FiBell } from "react-icons/fi";
-import { FaQuestion } from "react-icons/fa6";
-import { useDispatch, useSelector } from "react-redux";
+import { FiSearch, FiCheck, FiX } from "react-icons/fi";
 import { FaExclamation } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
 import { REVERSAL_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { updateReversal } from "@/redux/adminSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-const reversals = () => {
+const Reversals = () => {
   const { reversals } = useSelector((state) => state.admin);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const dispatch = useDispatch();
 
   const handleSearch = (e) => {
@@ -21,7 +31,7 @@ const reversals = () => {
   const handleStatusFilter = (e) => {
     setStatusFilter(e.target.value);
   };
-  
+
   let filteredRequests = reversals.filter((request) => {
     const matchesSearch =
       request.user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -176,6 +186,10 @@ const reversals = () => {
                     <button
                       title="Info"
                       className="p-1.5 bg-gray-500 bg-opacity-20 text-white rounded-lg hover:bg-opacity-30"
+                      onClick={() => {
+                        setSelectedRequest(request);
+                        setIsOpen(true);
+                      }}
                     >
                       <FaExclamation size={16} />
                     </button>
@@ -186,8 +200,49 @@ const reversals = () => {
           </tbody>
         </table>
       </div>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        {selectedRequest && (
+          <DialogContent className="p-4 bg-white rounded-lg shadow-lg max-w-sm w-full">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold text-gray-800">
+                {selectedRequest._id}
+              </DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
+              <span className="text-gray-600 mb-2">
+                <strong>Sender:</strong> {selectedRequest.user.fullname}
+                <br />
+                <strong>Transaction ID:</strong>{" "}
+                {selectedRequest.transactionID._id}
+                <br />
+                <strong>Reason:</strong> {selectedRequest.reason}
+                <br />
+                <strong>Amount:</strong> ₹{selectedRequest.transactionID.amount}
+                <br />
+                <strong>Status:</strong> {selectedRequest.status}
+                <br />
+                <strong>Mode:</strong> {selectedRequest.transactionID.mode}
+                <br />
+                <strong>Date:</strong>{" "}
+                {new Date(selectedRequest.createdAt).toLocaleDateString()}
+              </span>
+            </DialogDescription>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-white hover:text-white bg-[#000428] hover:bg-[#000] cursor-pointer"
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   );
 };
 
-export default reversals;
+export default Reversals;
