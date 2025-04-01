@@ -226,9 +226,7 @@ const ReversalsMain = () => {
                           <div className="mt-4">
                             <Button
                               className="bg-green-500 text-white text-sm"
-                              onClick={() =>
-                                handleReversalRequest(request._id)
-                              }
+                              onClick={() => handleReversalRequest(request._id)}
                             >
                               Submit Request
                             </Button>

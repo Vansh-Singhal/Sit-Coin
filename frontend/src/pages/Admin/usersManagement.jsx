@@ -108,12 +108,12 @@ const UsersManagement = () => {
                 <td className="px-4 py-3">
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                      user.status === "active"
-                        ? "bg-green-500 bg-opacity-20 text-green-300"
-                        : "bg-red-500 bg-opacity-20 text-red-300"
+                      user.status === "blocked || "
+                        ? "bg-red-500 bg-opacity-20 text-red-300"
+                        : "bg-green-500 bg-opacity-20 text-green-300"
                     }`}
                   >
-                    {user.status}
+                    {user.status ? user.status : "unblocked"}
                   </span>
                 </td>
                 <td className="px-4 py-3">
@@ -125,15 +125,15 @@ const UsersManagement = () => {
                         : "bg-green-500 bg-opacity-20 text-green-300 hover:bg-opacity-30"
                     }`}
                   >
-                    {user.status === "active" ? (
-                      <>
-                        <FiUserX size={14} />
-                        <span>Block</span>
-                      </>
-                    ) : (
+                    {user.status === "blocked" ? (
                       <>
                         <FiUserCheck size={14} />
                         <span>Unblock</span>
+                      </>
+                    ) : (
+                      <>
+                        <FiUserX size={14} />
+                        <span>Block</span>
                       </>
                     )}
                   </button>

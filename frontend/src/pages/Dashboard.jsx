@@ -28,13 +28,10 @@ const DashboardMain = () => {
   const { transactions } = useSelector((state) => state.transactions);
   const { user } = useSelector((state) => state.auth);
 
-  const currentMonth = new Date().getMonth(); // Get the current month (0-11)
-  const currentYear = new Date().getFullYear(); // Get the current year (e.g., 2025)
-
-  // 1. Total Balance (directly from user data)
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
   const totalBalance = `₹${user?.balance}`;
 
-  // 2. Monthly Spending (sent transactions in the current month that are completed)
   const monthlySpending = transactions
     .filter((transaction) => {
       const transactionDate = new Date(transaction.createdAt);
@@ -49,12 +46,11 @@ const DashboardMain = () => {
 
   const totalMonthlySpending = `₹${monthlySpending}`;
 
-  // 3. Total Savings (received transactions that are completed)
   const totalSavings = transactions
     .filter((transaction) => {
       return (
-        transaction.status === "completed" && // Only completed transactions
-        transaction.receiver._id === user?._id // Only transactions where the user is the receiver
+        transaction.status === "completed" &&
+        transaction.receiver._id === user?._id
       );
     })
     .reduce((total, transaction) => total + transaction.amount, 0);
@@ -132,14 +128,14 @@ const DashboardMain = () => {
             {transactions.map((transaction) =>
               transaction.status !== "failed" ? (
                 <TransactionItem
-                  key={transaction._id} // Use transaction._id for the key
-                  senderName={transaction.sender.fullname} // Accessing sender's fullname
-                  receiverName={transaction.receiver.fullname} // Accessing receiver's fullname
-                  amount={`₹${transaction.amount}`} // Displaying the amount
+                  key={transaction._id}
+                  senderName={transaction.sender.fullname}
+                  receiverName={transaction.receiver.fullname}
+                  amount={`₹${transaction.amount}`}
                   type={
                     transaction.sender._id === user?._id ? "sent" : "received"
                   } // Checking if the sender is the logged-in user
-                  date={new Date(transaction.createdAt).toLocaleString()} // Formatting the date
+                  date={new Date(transaction.createdAt).toLocaleString()}
                 />
               ) : null
             )}

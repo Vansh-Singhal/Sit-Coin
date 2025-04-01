@@ -32,6 +32,12 @@ const transactionSlice = createSlice({
 });
 
 // Action creators
-export const { fetchTransactionsStart, fetchTransactionsSuccess, fetchTransactionsFailure, addTransaction, clearTransactions } = transactionSlice.actions;
+export const {
+  fetchTransactionsStart,
+  fetchTransactionsSuccess,
+  fetchTransactionsFailure,
+  addTransaction,
+  clearTransactions,
+} = transactionSlice.actions;
 
 export default transactionSlice.reducer;

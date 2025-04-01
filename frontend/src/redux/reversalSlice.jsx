@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const reversalSlice = createSlice({
   name: "reversals",
   initialState: {
-    reversals : [],
+    reversals: [],
     loading: false,
     error: null,
   },
@@ -22,7 +22,7 @@ const reversalSlice = createSlice({
       state.loading = false;
       state.error = action.payload; // Error from the API or process
     },
-    addReversal : (state, action) => {
+    addReversal: (state, action) => {
       state.reversals.push(action.payload); // Add a new transaction
     },
     clearReversals: (state) => {
@@ -32,6 +32,12 @@ const reversalSlice = createSlice({
 });
 
 // Action creators
-export const { fetchReversalsStart, fetchReversalsSuccess, fetchReversalsFailure, addReversal, clearReversals } = reversalSlice.actions;
+export const {
+  fetchReversalsStart,
+  fetchReversalsSuccess,
+  fetchReversalsFailure,
+  addReversal,
+  clearReversals,
+} = reversalSlice.actions;
 
 export default reversalSlice.reducer;

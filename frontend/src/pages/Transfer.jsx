@@ -33,7 +33,7 @@ const Transfer = () => {
 
 const TransferMain = () => {
   const dispatch = useDispatch();
-  const {user} = useSelector((state)=>state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [transferMethod, setTransferMethod] = useState("contact");
   const [scanResult, setScanResult] = useState(null);
   const [formData, setFormData] = useState({

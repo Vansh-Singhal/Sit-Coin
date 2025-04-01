@@ -12,8 +12,6 @@ const Footer = () => {
         </Link>
       </div>
 
-      
-
       {/* Center Section - Links */}
       <div className="flex space-x-6">
         <Link to="/about" className="">
@@ -32,7 +30,11 @@ const Footer = () => {
         <a href="https://github.com" target="_blank" rel="noopener noreferrer">
           <FaGithub size={24} className="hover:text-gray-400" />
         </a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://linkedin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaLinkedin size={24} className="hover:text-gray-400" />
         </a>
         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">

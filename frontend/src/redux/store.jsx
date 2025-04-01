@@ -23,8 +23,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlice,
   admin: adminSlice,
-  transactions : transactionSlice,
-  reversals : reversalSlice,
+  transactions: transactionSlice,
+  reversals: reversalSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
