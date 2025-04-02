@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import ReversalInfo from "@/components/reversalInfo";
 
 const Reversals = () => {
   const { reversals } = useSelector((state) => state.admin);
@@ -201,33 +202,22 @@ const Reversals = () => {
         </table>
       </div>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        {selectedRequest && (
-          <DialogContent className="p-4 bg-white rounded-lg shadow-lg max-w-sm w-full">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold text-gray-800">
-                {selectedRequest._id}
+      <Dialog open={isOpen} onOpenChange={setIsOpen} className="bg-white shadow-md rounded-lg">
+        {isOpen && (
+          <DialogContent>
+            <DialogHeader className="hidden sm:block px-4 py-3 sm:px-6 bg-gray-50">
+              <DialogTitle className="text-md leading-3 font-medium text-gray-900">
+                Reversal Request Details
               </DialogTitle>
+              <p className="max-w-2xl text-sm text-gray-500">
+                Information about the user's reversal request and related
+                metrics.
+              </p>
             </DialogHeader>
-            <DialogDescription>
-              <span className="text-gray-600 mb-2">
-                <strong>Sender:</strong> {selectedRequest.user.fullname}
-                <br />
-                <strong>Transaction ID:</strong>{" "}
-                {selectedRequest.transactionID._id}
-                <br />
-                <strong>Reason:</strong> {selectedRequest.reason}
-                <br />
-                <strong>Amount:</strong> ₹{selectedRequest.transactionID.amount}
-                <br />
-                <strong>Status:</strong> {selectedRequest.status}
-                <br />
-                <strong>Mode:</strong> {selectedRequest.transactionID.mode}
-                <br />
-                <strong>Date:</strong>{" "}
-                {new Date(selectedRequest.createdAt).toLocaleDateString()}
-              </span>
-            </DialogDescription>
+            <ReversalInfo request={selectedRequest} />
+            
+            {/* ADDING HIDDEN DESCRIPTION CUZ THIS THROWS AN ERROR OTHERWISE */}
+            <DialogDescription className="hidden" /> 
 
             <DialogFooter>
               <Button

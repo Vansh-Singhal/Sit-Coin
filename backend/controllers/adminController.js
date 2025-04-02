@@ -99,3 +99,17 @@ export const getAllTransactions = async (req, res) => {
         dbgr(error.message);
     }
 }
+
+export const getUserReversals = async(req,res) => {
+    try {
+        const user = req.params.id;
+        const reversals = await reversaldb.find({ user }).populate('user').populate('transactionID').sort({ createdAt: -1 });
+        res.status(200).json({
+            message: "Reversal requests fetched successfully",
+            reversals,
+            success: true
+        });
+    } catch (error) {
+        dbgr(error);
+    }
+}
