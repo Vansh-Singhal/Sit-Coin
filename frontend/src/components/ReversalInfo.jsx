@@ -2,7 +2,6 @@ import { ADMIN_API_ENDPOINT } from "@/utils/constant.jsx";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { BiQr, BiSolidBank } from "react-icons/bi";
-import { FaPhone } from "react-icons/fa";
 import { IoMdPhonePortrait } from "react-icons/io";
 
 const calculateDaysSinceTransaction = (
