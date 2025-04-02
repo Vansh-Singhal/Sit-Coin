@@ -1,4 +1,3 @@
-import useGetAllUsers from "@/hooks/useGetAllUsers";
 import React, { useState } from "react";
 import { FiSearch, FiUserX, FiUserCheck } from "react-icons/fi";
 import { useSelector } from "react-redux";

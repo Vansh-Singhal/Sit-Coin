@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEdit2, FiCopy, FiEye, FiEyeOff } from "react-icons/fi";
 import { IoWalletOutline } from "react-icons/io5";
