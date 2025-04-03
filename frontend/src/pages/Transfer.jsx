@@ -63,6 +63,14 @@ const TransferMain = () => {
 
       console.log(res.data);
       dispatch(addTransaction(res.data.transaction));
+      setFormData({
+        contact: "",
+        amount: 0,
+        account_number: "",
+        mode: "contact",
+        note: "",
+      });
+      setScanResult(null);
       toast.success("Transaction completed");
     } catch (error) {
       console.warn(error);
