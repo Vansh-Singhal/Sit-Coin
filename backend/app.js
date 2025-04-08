@@ -9,6 +9,7 @@ import userRouter from "./routes/userRouter.js";
 import transactionRouter from './routes/transactionRouter.js';
 import reversalRouter from './routes/reversalRouter.js';
 import adminRouter from './routes/adminRouter.js';
+import path from 'path';
 
 const app = express();
 const dbgr = debug("development:app");
