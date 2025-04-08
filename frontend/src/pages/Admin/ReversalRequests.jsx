@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import ReversalInfo from "@/components/reversalInfo.jsx";
+import ReversalInfo from "@/components/ReversalInfo.jsx";
 
 const Reversals = () => {
   const { reversals } = useSelector((state) => state.admin);
