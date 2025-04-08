@@ -14,6 +14,7 @@ import path from 'path';
 const app = express();
 const dbgr = debug("development:app");
 dotenv.config();
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
