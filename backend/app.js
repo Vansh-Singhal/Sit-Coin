@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const corsOption = {
-    origin: "http://localhost:5173",
+    origin: "https://sit-coin.onrender.com/",
     credentials: true
 }
 app.use(cors(corsOption));
