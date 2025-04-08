@@ -69,6 +69,14 @@ const AppRouter = createBrowserRouter([
     ),
   },
   {
+    path: "/send/:mode?",
+    element: (
+      <ProtectedUserRoute>
+        <Transfer />
+      </ProtectedUserRoute>
+    ),
+  },  
+  {
     path: "/profile",
     element: (
       <ProtectedUserRoute>

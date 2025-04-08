@@ -3,13 +3,14 @@ import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import { IoWallet, IoSend, IoQrCode } from "react-icons/io5";
 import { FaHistory, FaCreditCard, FaUser } from "react-icons/fa";
-import { BiSolidBellRing } from "react-icons/bi";
+import { BiSolidBank, BiSolidBellRing } from "react-icons/bi";
 import { GoArrowUpRight, GoArrowDownLeft } from "react-icons/go";
 import React from "react";
 import { useSelector } from "react-redux";
 import useGetAllTransactions from "@/hooks/useGetAllTransactions";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetAllReversals from "@/hooks/useGetAllReversals";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   useGetAllTransactions();
@@ -25,6 +26,7 @@ const Dashboard = () => {
 };
 
 const DashboardMain = () => {
+  const navigate = useNavigate();
   const { transactions } = useSelector((state) => state.transactions);
   const { user } = useSelector((state) => state.auth);
 
@@ -99,16 +101,23 @@ const DashboardMain = () => {
           <ActionButton
             icon={<IoSend className="size-6" />}
             label="Send Money"
+            onClick={() => navigate("/send/contact")}
           />
           <ActionButton
             icon={<IoQrCode className="size-6" />}
             label="Scan & Pay"
+            onClick={() => navigate("/send/qr")}
           />
           <ActionButton
-            icon={<FaCreditCard className="size-6" />}
-            label="Cards"
+            icon={<BiSolidBank className="size-6" />}
+            label="Bank"
+            onClick={() => navigate("/send/bank")}
           />
-          <ActionButton icon={<FaUser className="size-6" />} label="Profile" />
+          <ActionButton
+            icon={<FaUser className="size-6" />}
+            label="Profile"
+            onClick={() => navigate("/profile")}
+          />
         </div>
 
         {/* Recent Transactions */}
@@ -156,8 +165,11 @@ const BalanceCard = ({ title, amount, icon }) => (
   </div>
 );
 
-const ActionButton = ({ icon, label }) => (
-  <Button className="p-4 h-auto flex flex-col items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm">
+const ActionButton = ({ icon, label, onClick }) => (
+  <Button
+    onClick={onClick}
+    className="p-4 h-auto flex flex-col items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+  >
     <div className="size-6 text-white">{icon}</div>
     <span className="text-white">{label}</span>
   </Button>

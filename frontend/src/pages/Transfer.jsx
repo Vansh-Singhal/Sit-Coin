@@ -17,9 +17,9 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import { TRANSACTION_API_ENDPOINT } from "@/utils/constant";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addTransaction } from "@/redux/transactionSlice";
-import { updateBalance } from "@/redux/authSlice";
+import { useParams } from "react-router-dom";
 
 const Transfer = () => {
   return (
@@ -32,9 +32,10 @@ const Transfer = () => {
 };
 
 const TransferMain = () => {
+  const {mode} = useParams();
+  const defaultMode = mode || "contact";
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const [transferMethod, setTransferMethod] = useState("contact");
+  const [transferMethod, setTransferMethod] = useState(defaultMode);
   const [scanResult, setScanResult] = useState(null);
   const [formData, setFormData] = useState({
     contact: "",
