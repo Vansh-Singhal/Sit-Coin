@@ -66,7 +66,7 @@ const ReversalInfo = ({ request }) => {
     transaction.createdAt,
     request.createdAt
   );
-  const RTD = parseFloat((7 - timeSinceTransaction) / 7).toFixed(2);
+  const RTD = parseFloat(((7 - timeSinceTransaction) / 7).toFixed(2));
 
   const reversalsInLastSixMonths = calculateReversalsInLastSixMonths(reversals);
   const customerReversalFrequency = `${reversalsInLastSixMonths} reversal / 6 months`;
@@ -75,11 +75,11 @@ const ReversalInfo = ({ request }) => {
 
   const transactionAmount = transaction.amount;
   const TA = parseFloat(transactionAmount / 100000).toFixed(2);
+  const overallCredibilityScore = Math.max(parseFloat((1 - TA) + (1 - CRF) + RTD), 0);
+  const roundedScore = parseFloat(overallCredibilityScore.toFixed(2));
+  
+  const decision = roundedScore >= 1.0 ? "Approved" : "Rejected";
 
-  const overallCredibilityScore = Math.max(parseFloat((1-TA) + (1 - CRF) + (RTD)).toFixed(2),0);
-
-  const decision = overallCredibilityScore >= 1.0 ? "Approved" : "Rejected";
-  console.log();
   return (
     <div className="border-t border-gray-200">
       <dl>
@@ -137,7 +137,7 @@ const ReversalInfo = ({ request }) => {
             Overall Credibility Score
           </dt>
           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {overallCredibilityScore}
+            {roundedScore}
           </dd>
         </div>
         <div className="bg-gray-50 px-4 py-2 md:py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

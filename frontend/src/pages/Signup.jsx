@@ -49,7 +49,6 @@ const SignupMain = () => {
 
     try {
       const res = await axios.post(`${USER_API_ENDPOINT}/register`, formData);
-      console.log("Signup Success:", res.data);
       toast.success(res.data.message);
       navigate("/login");
     } catch (err) {

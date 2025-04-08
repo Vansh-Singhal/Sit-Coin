@@ -21,7 +21,6 @@ const useGetAllReversals = () => {
         });
 
         if (res.data.success) {
-          console.log(res.data);
           dispatch(fetchReversalsSuccess(res.data.reversals));
         }
       } catch (error) {

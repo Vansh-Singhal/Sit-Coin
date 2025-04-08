@@ -45,7 +45,6 @@ const LoginMain = () => {
         withCredentials: true,
       });
 
-      console.log("Login Success:", res.data);
       dispatch(loginSuccess(res.data));
       navigate("/dashboard");
       toast.success(res.data.message);

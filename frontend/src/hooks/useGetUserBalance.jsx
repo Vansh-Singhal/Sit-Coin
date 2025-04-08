@@ -15,7 +15,6 @@ const useGetUserBalance = () => {
         });
 
         if (res.data.success) {
-          console.log(res.data.balance);
           dispatch(updateBalance(res.data.balance));
         }
       } catch (error) {

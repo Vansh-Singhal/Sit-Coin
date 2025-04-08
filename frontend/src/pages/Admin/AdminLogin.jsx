@@ -45,7 +45,6 @@ const AdminLoginMain = () => {
         withCredentials: true,
       });
 
-      console.log("Admin Login Success:", res.data);
       dispatch(loginSuccess(res.data));
 
       // Redirect based on admin role

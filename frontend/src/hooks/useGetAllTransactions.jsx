@@ -21,7 +21,6 @@ const useGetAllTransactions = () => {
         });
 
         if (res.data.success) {
-          console.log(res.data);
           dispatch(fetchTransactionsSuccess(res.data.transactions));
         }
       } catch (error) {

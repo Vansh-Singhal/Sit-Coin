@@ -61,7 +61,6 @@ const TransferMain = () => {
         }
       );
 
-      console.log(res.data);
       dispatch(addTransaction(res.data.transaction));
       setFormData({
         contact: "",
@@ -222,7 +221,6 @@ const TransferMain = () => {
                       <Scanner
                         classNames=""
                         onScan={(result) => {
-                          console.log(result[0].rawValue);
                           setScanResult(result);
                         }}
                       />
