@@ -12,7 +12,7 @@ export const transferMoney = async (req, res) => {
         if (!sender_id || !amount || amount <= 0 || !mode) {
             return res.status(400).json({ message: "Invalid transaction details", success: false });
         }
-
+        amount = (typeof amount === "string") ? parseInt(amount) : amount;
         // Find receiver based on contact or account number
         let receiver;
         if (contact) {
