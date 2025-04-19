@@ -6,7 +6,7 @@ const dbgr = debug("development:transactionController");
 
 export const transferMoney = async (req, res) => {
     try {
-        const { amount, mode, contact, account_number } = req.body;
+        let { amount, mode, contact, account_number } = req.body;
         const sender_id = req.id;
 
         if (!sender_id || !amount || amount <= 0 || !mode) {
