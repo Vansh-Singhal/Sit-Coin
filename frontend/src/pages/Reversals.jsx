@@ -44,7 +44,7 @@ const isWithinLast7Days = (date) => {
 const ReversalsMain = () => {
   const dispatch = useDispatch();
   const [reason, setReason] = useState("");
-  const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
+  const [openTransactionId, setOpenTransactionId] = useState(null); // Track open state per transaction
   let { user } = useSelector((state) => state.auth);
   let { transactions } = useSelector((state) => state.transactions);
   let { reversals } = useSelector((state) => state.reversals);
@@ -88,6 +88,8 @@ const ReversalsMain = () => {
 
       dispatch(addReversal(res.data.reversal));
       toast.success("Reversal Requested Successfully");
+
+      setReason("");
     } catch (error) {
       console.error(error);
       toast.error("Request failed");
@@ -203,14 +205,20 @@ const ReversalsMain = () => {
                     <div>
                       <Button
                         className="bg-white hover:bg-white/70 text-black text-sm mt-4"
-                        onClick={() => setIsCollapsibleOpen(!isCollapsibleOpen)} // Open the collapsible when clicked
+                        onClick={() =>
+                          setOpenTransactionId((prev) =>
+                            prev === request._id ? null : request._id
+                          )
+                        }
                       >
                         Request Reversal
                       </Button>
 
                       <Collapsible
-                        open={isCollapsibleOpen}
-                        onOpenChange={setIsCollapsibleOpen}
+                        open={openTransactionId === request._id}
+                        onOpenChange={(isOpen) =>
+                          setOpenTransactionId(isOpen ? request._id : null)
+                        }
                       >
                         <CollapsibleContent>
                           <div className="mt-4">
