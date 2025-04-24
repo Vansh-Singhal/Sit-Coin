@@ -14,6 +14,10 @@ import AdminSettings from "./AdminSettings.jsx";
 import useGetAllUsers from "@/hooks/useGetAllUsers.jsx";
 import useGetAllUsersTransactions from "@/hooks/useGetAllUsersTransactions.jsx";
 import useGetAllUsersReversals from "@/hooks/useGetAllUsersReversal.jsx";
+import { BiExit } from "react-icons/bi";
+import { logout } from "@/redux/authSlice.jsx";
+import { useDispatch } from "react-redux";
+import { adminLogout } from "@/redux/adminSlice.jsx";
 
 const AdminDashboard = () => {
   useGetAllUsers();
@@ -28,6 +32,7 @@ const AdminDashboard = () => {
 };
 
 const AdminDashboardMain = () => {
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("users");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -45,6 +50,11 @@ const AdminDashboardMain = () => {
         return <UsersManagement />;
     }
   };
+
+  const logoutHandler = () => {
+    dispatch(logout());
+    dispatch(adminLogout());
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#000428] to-[#004e92] p-6">
@@ -122,6 +132,19 @@ const AdminDashboardMain = () => {
                   >
                     <FiSettings className="text-lg" />
                     <span>Settings</span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => logoutHandler()}
+                    className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
+                      activeTab === "Logout"
+                        ? "bg-blue-700 text-white"
+                        : "text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-black"
+                    }`}
+                  >
+                    <BiExit />
+                    <span>Logout</span>
                   </button>
                 </li>
               </ul>
