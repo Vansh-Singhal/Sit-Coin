@@ -78,7 +78,7 @@ const ReversalInfo = ({ request }) => {
   const overallCredibilityScore = Math.max(parseFloat((1 - TA) + (1 - CRF) + RTD), 0);
   const roundedScore = parseFloat(overallCredibilityScore.toFixed(2));
   
-  const decision = roundedScore >= 1.0 ? "Approved" : "Rejected";
+  const decision = roundedScore >= 1.50 ? "Approved" : "Rejected";
 
   return (
     <div className="border-t border-gray-200">
